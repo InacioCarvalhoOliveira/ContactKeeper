@@ -1,6 +1,9 @@
+using CollabNet.API.Interfaces;
 using ContactKeeper;
 using ContactKeeper.Contracts;
+using ContactKeeper.Data;
 using ContactKeeper.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +12,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IuserRepository, UserRepository>();
+builder.Services.AddScoped<UnitOfWork>();
+builder.Services.AddScoped<DataContext>();
+builder.Services.AddScoped<DbSession>();
+
+builder.Services.AddDbContext<DataContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("connectionString"));
+});
 
 var app = builder.Build();
 

@@ -1,9 +1,14 @@
+using ContactKeeper;
+using ContactKeeper.Contracts;
+using ContactKeeper.Interfaces;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IuserRepository, UserRepository>();
 
 var app = builder.Build();
 
@@ -12,6 +17,13 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    app.UseReDoc(c =>
+    {
+        c.DocumentTitle = "REDDOC API DOCUMENTATION";
+        c.SpecUrl = "/swagger/v1/swagger.json";
+
+    });
 }
 
 app.UseHttpsRedirection();
@@ -36,6 +48,7 @@ app.MapGet("/weatherforecast", () =>
 .WithName("GetWeatherForecast")
 .WithOpenApi();
 
+app.UseReDoc();
 app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)

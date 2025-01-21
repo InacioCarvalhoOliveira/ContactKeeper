@@ -1,0 +1,156 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\GitHub\\Dotnet\\APIS\\ContactKeeper\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{57A7CBB2-29E5-4633-ABD9-4D631EF92A33}|ContactKeeper.csproj|d:\\github\\dotnet\\apis\\contactkeeper\\models\\phonenumber.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57A7CBB2-29E5-4633-ABD9-4D631EF92A33}|ContactKeeper.csproj|solutionrelative:models\\phonenumber.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57A7CBB2-29E5-4633-ABD9-4D631EF92A33}|ContactKeeper.csproj|d:\\github\\dotnet\\apis\\contactkeeper\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57A7CBB2-29E5-4633-ABD9-4D631EF92A33}|ContactKeeper.csproj|solutionrelative:models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57A7CBB2-29E5-4633-ABD9-4D631EF92A33}|ContactKeeper.csproj|d:\\github\\dotnet\\apis\\contactkeeper\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57A7CBB2-29E5-4633-ABD9-4D631EF92A33}|ContactKeeper.csproj|solutionrelative:controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57A7CBB2-29E5-4633-ABD9-4D631EF92A33}|ContactKeeper.csproj|d:\\github\\dotnet\\apis\\contactkeeper\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57A7CBB2-29E5-4633-ABD9-4D631EF92A33}|ContactKeeper.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57A7CBB2-29E5-4633-ABD9-4D631EF92A33}|ContactKeeper.csproj|d:\\github\\dotnet\\apis\\contactkeeper\\contracts\\iuserrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57A7CBB2-29E5-4633-ABD9-4D631EF92A33}|ContactKeeper.csproj|solutionrelative:contracts\\iuserrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57A7CBB2-29E5-4633-ABD9-4D631EF92A33}|ContactKeeper.csproj|d:\\github\\dotnet\\apis\\contactkeeper\\data\\datacontex.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57A7CBB2-29E5-4633-ABD9-4D631EF92A33}|ContactKeeper.csproj|solutionrelative:data\\datacontex.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57A7CBB2-29E5-4633-ABD9-4D631EF92A33}|ContactKeeper.csproj|d:\\github\\dotnet\\apis\\contactkeeper\\interfaces\\uinitofwork_user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57A7CBB2-29E5-4633-ABD9-4D631EF92A33}|ContactKeeper.csproj|solutionrelative:interfaces\\uinitofwork_user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57A7CBB2-29E5-4633-ABD9-4D631EF92A33}|ContactKeeper.csproj|d:\\github\\dotnet\\apis\\contactkeeper\\interfaces\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57A7CBB2-29E5-4633-ABD9-4D631EF92A33}|ContactKeeper.csproj|solutionrelative:interfaces\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "DataContex.cs",
+              "DocumentMoniker": "D:\\GitHub\\Dotnet\\APIS\\ContactKeeper\\Data\\DataContex.cs",
+              "RelativeDocumentMoniker": "Data\\DataContex.cs",
+              "ToolTip": "D:\\GitHub\\Dotnet\\APIS\\ContactKeeper\\Data\\DataContex.cs",
+              "RelativeToolTip": "Data\\DataContex.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-12T20:02:30.512Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "UserController.cs",
+              "DocumentMoniker": "D:\\GitHub\\Dotnet\\APIS\\ContactKeeper\\Controllers\\UserController.cs",
+              "RelativeDocumentMoniker": "Controllers\\UserController.cs",
+              "ToolTip": "D:\\GitHub\\Dotnet\\APIS\\ContactKeeper\\Controllers\\UserController.cs",
+              "RelativeToolTip": "Controllers\\UserController.cs",
+              "ViewState": "AgIAADAAAAAAAAAAAAAjwEAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-12T19:50:15.351Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "PhoneNumber.cs",
+              "DocumentMoniker": "D:\\GitHub\\Dotnet\\APIS\\ContactKeeper\\Models\\PhoneNumber.cs",
+              "RelativeDocumentMoniker": "Models\\PhoneNumber.cs",
+              "ToolTip": "D:\\GitHub\\Dotnet\\APIS\\ContactKeeper\\Models\\PhoneNumber.cs",
+              "RelativeToolTip": "Models\\PhoneNumber.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwBoAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-12T19:46:30.392Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\GitHub\\Dotnet\\APIS\\ContactKeeper\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "D:\\GitHub\\Dotnet\\APIS\\ContactKeeper\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-12T19:40:59.607Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "UserRepository.cs",
+              "DocumentMoniker": "D:\\GitHub\\Dotnet\\APIS\\ContactKeeper\\Interfaces\\UserRepository.cs",
+              "RelativeDocumentMoniker": "Interfaces\\UserRepository.cs",
+              "ToolTip": "D:\\GitHub\\Dotnet\\APIS\\ContactKeeper\\Interfaces\\UserRepository.cs",
+              "RelativeToolTip": "Interfaces\\UserRepository.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAAowCUAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-12T19:39:12.47Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "UinitOfWork_User.cs",
+              "DocumentMoniker": "D:\\GitHub\\Dotnet\\APIS\\ContactKeeper\\Interfaces\\UinitOfWork_User.cs",
+              "RelativeDocumentMoniker": "Interfaces\\UinitOfWork_User.cs",
+              "ToolTip": "D:\\GitHub\\Dotnet\\APIS\\ContactKeeper\\Interfaces\\UinitOfWork_User.cs",
+              "RelativeToolTip": "Interfaces\\UinitOfWork_User.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAcAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-12T19:38:24.283Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "User.cs",
+              "DocumentMoniker": "D:\\GitHub\\Dotnet\\APIS\\ContactKeeper\\Models\\User.cs",
+              "RelativeDocumentMoniker": "Models\\User.cs",
+              "ToolTip": "D:\\GitHub\\Dotnet\\APIS\\ContactKeeper\\Models\\User.cs",
+              "RelativeToolTip": "Models\\User.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-12T19:13:56.625Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "IuserRepository.cs",
+              "DocumentMoniker": "D:\\GitHub\\Dotnet\\APIS\\ContactKeeper\\Contracts\\IuserRepository.cs",
+              "RelativeDocumentMoniker": "Contracts\\IuserRepository.cs",
+              "ToolTip": "D:\\GitHub\\Dotnet\\APIS\\ContactKeeper\\Contracts\\IuserRepository.cs",
+              "RelativeToolTip": "Contracts\\IuserRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-12T19:13:45.228Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

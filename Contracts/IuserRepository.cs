@@ -4,11 +4,11 @@ namespace ContactKeeper.Contracts
 {
     public interface IuserRepository
     {
-        Task<User> GetUserById(int id);      
         Task<IEnumerable<User>> GetUsers();
-        Task GetUserByPhoneNumber(PhoneNumber phoneNumber);
+        Task<User> GetUserById(int id);      
+        Task<IList<User>> GetInfoUserByDdd(int ddd);
         Task<User> AddUser(User user);
         Task<User> UpdateUser(User user);
-        Task<User> DeleteUser(User user);
+        Task<User> DeleteUser(int id);
     }
 }

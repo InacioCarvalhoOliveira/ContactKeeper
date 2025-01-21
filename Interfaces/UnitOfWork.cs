@@ -3,7 +3,7 @@ using ContactKeeper.Contracts;
 using ContactKeeper.Data;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace CollabNet.API.Interfaces
+namespace ContactKeeper.Interfaces
 {
     public sealed class UnitOfWork : DbSession
     {

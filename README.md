@@ -1,6 +1,6 @@
 
 <h1 align="center">
-API Product ordering and management
+API de Cadastro de Contatos Telefônicos
 </h1>
 
 ### Projeto
@@ -11,7 +11,6 @@ Este projeto se baseia na ideia de Gerenciamento de contatos Telefônicos. Com e
 - Framework: ASP.NET CORE (Dapper/EF)
 - Banco de Dados: SQL Server(em container Docker)
 - Entity Framework Migrations,
-- Microsoft JWTBearier,
 - implementação da documentação swagger, DataAnnotations, UnitOfWork, Singleton, Hot e Cold Cache.
 
 ## ⚒️ Configuração

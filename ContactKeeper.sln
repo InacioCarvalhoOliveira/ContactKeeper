@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.5.002.0
+VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContactKeeper", "ContactKeeper.csproj", "{57A7CBB2-29E5-4633-ABD9-4D631EF92A33}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContactKeeper", "ContactKeeper.csproj", "{31180C49-85DF-4A7F-889B-17489CC5E545}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{57A7CBB2-29E5-4633-ABD9-4D631EF92A33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{57A7CBB2-29E5-4633-ABD9-4D631EF92A33}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{57A7CBB2-29E5-4633-ABD9-4D631EF92A33}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{57A7CBB2-29E5-4633-ABD9-4D631EF92A33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31180C49-85DF-4A7F-889B-17489CC5E545}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31180C49-85DF-4A7F-889B-17489CC5E545}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31180C49-85DF-4A7F-889B-17489CC5E545}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31180C49-85DF-4A7F-889B-17489CC5E545}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {88921B62-C5B8-4A77-9A1C-FDC2D9836127}
+		SolutionGuid = {A8A59CCB-9330-45AF-B15C-5CF0E45277EF}
 	EndGlobalSection
 EndGlobal

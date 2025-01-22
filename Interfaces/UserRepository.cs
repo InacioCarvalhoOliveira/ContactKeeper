@@ -1,3 +1,4 @@
+using System.Text.Json;
 using ContactKeeper.Contracts;
 using ContactKeeper.Data;
 using ContactKeeper.Models;
@@ -57,12 +58,23 @@ namespace ContactKeeper.Interfaces
             }
             return users;
         }
-        public async Task<User> AddUser(User user)
-        {            
+       public async Task<User> AddUser(User user)
+    {
+        string path = "d:/GitHub/Dotnet/APIS/ContactKeeper/util/ddd/dddsBrasileiros.json";
+        var jsonString = await File.ReadAllTextAsync(path);
+        var dddsData = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, List<string>>>>(jsonString);
+
+        if (dddsData != null && dddsData["dddsPorEstado"].Values.Any(list => list.Contains(user.PhoneNumber.DDD.ToString())))
+        {
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
             return user;
         }
+        else
+        {
+            throw new ArgumentException("DDD inválido.");
+        }
+    }
         public async Task<User> DeleteUser(int id)
         {
            var userToDelete = await GetUserById(id);

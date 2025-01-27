@@ -6,7 +6,6 @@ API de Cadastro de Contatos Telefônicos
 
 Este projeto se baseia na ideia de Gerenciamento de contatos Telefônicos. Com ele é possível Adicionar um Contato junto a dados do usuário. Foi implementado no projeto design patterns, documentação e boas práticas de estruturação.
 
-
 [Vídeo apresentação](apresentacao_projeto.mkv "apresentação")
 
 ## 🥷 Tecnologias
@@ -23,6 +22,10 @@ Pré-requisito: Dotnet sdk8.0
 
 1. Clone o repositório
 2. Instale as dependências documentadas em **/notas.md**
+
+## 📍End-Points API:
+
+![1738016751476](image/README/1738016751476.png)
 
 ## 👩‍💻 Autor
 

@@ -12,16 +12,21 @@ namespace ContactKeeper.Controllers
     public class UserController : ControllerBase
     {
         private readonly DataContext _context;
-        private readonly UnitOfWork _unitOfWork;
+        private readonly IunitOfWork _iunitOfWork;
         private readonly IuserRepository _userRepository;
-        public UserController(DataContext context,
-        IuserRepository userRepository,
-        UnitOfWork UnitOfWork)
+
+        public UserController
+        (
+            DataContext context,
+            IuserRepository userRepository,
+            IunitOfWork iunitOfWork
+        )        
         {
             _context = context;            
             _userRepository = userRepository;
-            _unitOfWork = UnitOfWork;
+            _iunitOfWork = iunitOfWork;
         }
+       
 
         #region [getallUsers]
         [HttpGet]
@@ -31,7 +36,7 @@ namespace ContactKeeper.Controllers
         )]   
         public async Task<ActionResult<List<User>>> GetUsers()
         {
-            var users = await _unitOfWork.UserRepository.GetUsers();
+            var users = await _iunitOfWork.UserRepository.GetUsers();
             try
             {
                 return Ok(users);
@@ -52,7 +57,7 @@ namespace ContactKeeper.Controllers
         )]
         public async Task<ActionResult<User>> GetUserById(int id)
         {
-            var user = await _unitOfWork.UserRepository.GetUserById(id);
+            var user = await _iunitOfWork.UserRepository.GetUserById(id);
             if(user == null)
             return NotFound(new { message = "user not found" });
             
@@ -98,9 +103,9 @@ namespace ContactKeeper.Controllers
             return BadRequest(ModelState); // Retorna erros de validação padrão
             }                      
 
-            _unitOfWork.BeginTransaction();
-            await _unitOfWork.UserRepository.AddUser(user);
-            await _unitOfWork.CommitAsync();
+            _iunitOfWork.BeginTransaction();
+            await _iunitOfWork.UserRepository.AddUser(user);
+            await _iunitOfWork.CommitAsync();
 
             return CreatedAtAction(nameof(GetUsers), new { id = user.Id }, user);
         }
@@ -126,14 +131,14 @@ namespace ContactKeeper.Controllers
 
             try
             {
-                _unitOfWork.BeginTransaction();
-                await _unitOfWork.UserRepository.UpdateUser(user);
-                await _unitOfWork.CommitAsync();
+                _iunitOfWork.BeginTransaction();
+                await _iunitOfWork.UserRepository.UpdateUser(user);
+                await _iunitOfWork.CommitAsync();
                 return Ok(user);
             }
             catch
             {
-                _unitOfWork.Rollback();
+                _iunitOfWork.Rollback();
                 return BadRequest(new { message = "cant update user" });
             }
         }
@@ -150,14 +155,14 @@ namespace ContactKeeper.Controllers
         {
            try
            {
-            _unitOfWork.BeginTransaction();
-            await _unitOfWork.UserRepository.DeleteUser(id);
-            await _unitOfWork.CommitAsync();
+            _iunitOfWork.BeginTransaction();
+            await _iunitOfWork.UserRepository.DeleteUser(id);
+            await _iunitOfWork.CommitAsync();
             return NoContent();
            }
            catch(Exception ex)
            {
-               _unitOfWork.Rollback();
+               _iunitOfWork.Rollback();
                return BadRequest( ex.Message);
            }
         }

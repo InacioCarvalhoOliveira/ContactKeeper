@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace ContactKeeper.Interfaces
 {
-    public sealed class UnitOfWork : DbSession
+    public sealed class UnitOfWork : DbSession, IunitOfWork
     {
         private readonly DataContext _context;
         private readonly IuserRepository _userRepository;

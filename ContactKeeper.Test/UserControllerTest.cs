@@ -82,6 +82,7 @@ public class UserControllerTest
 
             }
         };
+        
         _mockRepository.Setup(repo => repo.GetInfoUserByDdd(21)).ReturnsAsync(users);
         var result = await _controller.GetUsersByDdd(21);
         var okResult = result as OkObjectResult;
@@ -93,6 +94,29 @@ public class UserControllerTest
         var results = okResult.Value as List<User>;
         Assert.That(results, Is.Not.Null); //check if users is not null
         Assert.That(results, Is.InstanceOf<List<User>>()); //check if users is instance of List<User>
+    }
+    #endregion
+    #region [getUserById]
+    [Test]
+    public async Task GetUserById()
+    {
+        //Arrange
+        var user = new User
+        {
+            Id = 1008,
+            Username = "inacio",
+            Email = "inacio.carvalho@gmail.com",
+            PhoneNumber = new PhoneNumber
+            {
+                DDI = "32",
+                DDD = 21,
+                LocalNumber = "11223344"
+            }
+        };        
+        _mockRepository.Setup(repo => repo.GetUserById(user.Id)).ReturnsAsync(user);
+        var result = await _controller.GetUserById(user.Id);
+        //Assert.That(result, Is.EqualTo(user = result.Value));
+        Assert.That(result, Is.Not.EqualTo(Type.EmptyTypes)); 
     }
     #endregion
 }

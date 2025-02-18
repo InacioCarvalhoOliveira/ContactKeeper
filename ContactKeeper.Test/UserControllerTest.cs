@@ -29,7 +29,8 @@ public class UserControllerTest
 
         _controller = new UserController(_mockContext.Object, _mockRepository.Object, _mockIunitOfWork.Object);
     }
-    #region [getallUsers]   
+    
+    #region [getallUsers]
     [Test]
     public async Task GetAllUsers()
     {
@@ -62,6 +63,7 @@ public class UserControllerTest
         Assert.That(results, Is.InstanceOf<List<User>>()); //check if users is instance of List<User>
     }
     #endregion
+   
     #region [getUsersByDdd]
     [Test]
     public async Task GetUserByDdd()
@@ -96,6 +98,7 @@ public class UserControllerTest
         Assert.That(results, Is.InstanceOf<List<User>>()); //check if users is instance of List<User>
     }
     #endregion
+    
     #region [getUserById]
     [Test]
     public async Task GetUserById()

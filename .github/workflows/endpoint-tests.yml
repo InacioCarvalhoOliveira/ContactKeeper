@@ -1,31 +1,22 @@
 name: ci-cd pipeline test for endpoint tests
+trigger:
+- main
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+pool:
+  name: 'AZ-Pool'
 
-jobs:
-    build-and-test:
-        runs-on: AZ-Pool
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v2
+steps:
+- task: UseDotNet@2
+  displayName: 'Setup .NET Core'
+  inputs:
+    packageType: 'sdk'
+    version: '8.0.x'
 
-            - name: Setup .NET
-              uses: actions/setup-dotnet@v2            
-              with:
-                dotnet-version: '8.0.x'
+- script: dotnet restore
+  displayName: 'Restore dependencies'
 
-            - name: restore dependencies
-              run: dotnet restore
+- script: dotnet build --configuration Release --no-restore
+  displayName: 'Build'
 
-            - name: Build
-              run: dotnet build --configuration Release --no-restore
-
-            - name: Run tests
-              run: dotnet test --no-build --verbosity normal
-            
+- script: dotnet test --no-build --verbosity normal
+  displayName: 'Run tests'

@@ -45,10 +45,9 @@ builder.Services.AddCors(options =>
         });
 });
 
-
-
 builder.Services.AddScoped<IuserRepository, UserRepository>();
 builder.Services.AddScoped<UnitOfWork>();
+builder.Services.AddScoped<IunitOfWork, UnitOfWork>();
 builder.Services.AddScoped<DataContext>();
 builder.Services.AddScoped<DbSession>();
 builder.Services.AddMemoryCache();

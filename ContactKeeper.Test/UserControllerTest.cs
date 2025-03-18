@@ -119,7 +119,7 @@ public class UserControllerTest
         _mockRepository.Setup(repo => repo.GetUserById(user.Id)).ReturnsAsync(user);
         var result = await _controller.GetUserById(user.Id);
         //Assert.That(result, Is.EqualTo(user = result.Value));
-        Assert.That(result, Is.Not.EqualTo(Type.EmptyTypes)); 
+        Assert.That(result, Is.Not.Empty); 
     }
     #endregion
 }

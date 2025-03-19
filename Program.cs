@@ -52,13 +52,23 @@ builder.Services.AddScoped<DataContext>();
 builder.Services.AddScoped<DbSession>();
 builder.Services.AddMemoryCache();
 
+var app = builder.Build();
 
 builder.Services.AddDbContext<DataContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("connectionString"));
+    if (builder.Environment.IsDevelopment())
+    {
+        // Usa a string de conexão para desenvolvimento
+        //$env:ASPNETCORE_ENVIRONMENT="Development" definida padrao
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DevelopmentConnection"));
+        app.UseDeveloperExceptionPage();
+    }
+    else
+    {
+        // Usa a string de conexão para produção
+        options.UseSqlServer(builder.Configuration.GetConnectionString("ProductionConnection"));
+    }
 });
-
-var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

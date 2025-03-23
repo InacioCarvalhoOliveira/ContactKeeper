@@ -10,9 +10,7 @@ on:
 
 jobs:
     build-and-test:
-        runs-on: ubuntu-latest
-        env:
-         ENV_DEVOPS: ${{ secrets.ENV_DEVOPS }}          
+        runs-on: ubuntu-latest             
         steps:
             - name: Checkout code
               uses: actions/checkout@v2
@@ -20,8 +18,11 @@ jobs:
             - name: Setup dotnet 8.0
               uses: actions/setup-dotnet@v1
               with:
-                dotnet-version: '8.0'      
-           
+                dotnet-version: '8.0' 
+                
+            - name: Export ENV_DEVOPS
+              run: echo "${{ secrets.ENV_DEVOPS }}" >> $GITHUB_ENV
+            
             - name: Clean build artifacts
               run: dotnet clean ContactKeeper.csproj
             

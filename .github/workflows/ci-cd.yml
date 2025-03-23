@@ -12,7 +12,7 @@ on:
 
 jobs:
     build-and-test:
-        runs-on: ubuntu-latest       
+        runs-on: ubuntu-latest                    
         steps:
             - name: Checkout code
               uses: actions/checkout@v2
@@ -20,10 +20,11 @@ jobs:
             - name: Setup dotnet 8.0
               uses: actions/setup-dotnet@v1
               with:
-                dotnet-version: '8.0'      
+                dotnet-version: '8.0'  
+
             - name: Export ASPNETCORE_ENVIRONMENT
               run: echo "${{ secrets.ENV_DEVOPS }}" >> $GITHUB_ENV
-              
+
             - name: Clean build artifacts
               run: dotnet clean ContactKeeper.csproj
             

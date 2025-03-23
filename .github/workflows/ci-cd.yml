@@ -1,3 +1,5 @@
+# I still thinking in change server for onpremises, but i will do it later
+
 name: ci-cd pipeline
 
 on:
@@ -10,7 +12,7 @@ on:
 
 jobs:
     build-and-test:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-latest       
         steps:
             - name: Checkout code
               uses: actions/checkout@v2
@@ -19,7 +21,9 @@ jobs:
               uses: actions/setup-dotnet@v1
               with:
                 dotnet-version: '8.0'      
-           
+            - name: Export ASPNETCORE_ENVIRONMENT
+              run: echo "${{ secrets.ENV_DEVOPS }}" >> $GITHUB_ENV
+              
             - name: Clean build artifacts
               run: dotnet clean ContactKeeper.csproj
             
@@ -32,7 +36,6 @@ jobs:
             - name: Run tests
               env:
                 DOTNET_CLI_TELEMETRY_OPTOUT: 1
-                DOTNET_NOLOGO: true
-                ASPNETCORE_ENVIRONMENT: Development
+                DOTNET_NOLOGO: true                
               run: dotnet test ./ContactKeeper.Test/ContactKeeper.Test.csproj --configuration Release --verbosity normal
            

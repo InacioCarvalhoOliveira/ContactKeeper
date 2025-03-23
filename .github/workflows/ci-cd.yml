@@ -11,6 +11,8 @@ on:
 jobs:
     build-and-test:
         runs-on: ubuntu-latest
+        env:
+          ${{ secrets.ENV_DEVOPS }}          
         steps:
             - name: Checkout code
               uses: actions/checkout@v2
@@ -32,7 +34,6 @@ jobs:
             - name: Run tests
               env:
                 DOTNET_CLI_TELEMETRY_OPTOUT: 1
-                DOTNET_NOLOGO: true
-                ASPNETCORE_ENVIRONMENT: Development
+                DOTNET_NOLOGO: true                
               run: dotnet test ./ContactKeeper.Test/ContactKeeper.Test.csproj --configuration Release --verbosity normal
            

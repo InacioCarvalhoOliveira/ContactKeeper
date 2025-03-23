@@ -21,7 +21,7 @@ jobs:
                 dotnet-version: '8.0'          
              
             - name: Clean build artifacts
-              run: dotnet clean ContactKeeper/ContactKeeper.csproj
+              run: dotnet clean ContactKeeper.csproj
             
             - name: Install dependencies
               run: dotnet restore ContactKeeper.csproj

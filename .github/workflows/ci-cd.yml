@@ -24,11 +24,11 @@ jobs:
                 dotnet-version: '8.0'          
              
             - name: Install dependencies
-              run: dotnet restore ./ContactKeeper/ContactKeeper.csproj
+              run: dotnet restore ContactKeeper.csproj
               
 
             - name: Run tests
-              run: dotnet test ./ContactKeeper.Test/ContactKeeper.csproj
+              run: dotnet test ./ContactKeeper.Test/ContactKeeper.Test.csproj
             
             - name: Build project
-              run: dotnet build ./ContactKeeper/ContactKeeper.csproj
+              run: dotnet build ContactKeeper.csproj

@@ -18,8 +18,8 @@ jobs:
             - name: Setup dotnet 8.0
               uses: actions/setup-dotnet@v1
               with:
-                dotnet-version: '8.0'          
-             
+                dotnet-version: '8.0'      
+           
             - name: Clean build artifacts
               run: dotnet clean ContactKeeper.csproj
             
@@ -39,7 +39,7 @@ jobs:
               run: dotnet test ./ContactKeeper.Test/ContactKeeper.Test.csproj --diag:testlog.txt --logger "console;verbosity=detailed"
       
             - name: Upload test logs
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               with:
                 name: testlog.txt
                 path: testlog.txt

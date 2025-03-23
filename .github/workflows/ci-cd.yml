@@ -12,7 +12,7 @@ jobs:
     build-and-test:
         runs-on: ubuntu-latest
         env:
-          ${{ secrets.ENV_DEVOPS }}          
+         ENV_DEVOPS: ${{ secrets.ENV_DEVOPS }}          
         steps:
             - name: Checkout code
               uses: actions/checkout@v2

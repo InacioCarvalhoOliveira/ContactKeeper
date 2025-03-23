@@ -28,7 +28,7 @@ jobs:
               
 
             - name: Run tests
-              run: dotnet test ./ContactKeeper.Test/ContactKeeper.Test.csproj
+              run: dotnet test ./ContactKeeper.Test/ContactKeeper.Test.csproj --no-build --verbosity normal
             
             - name: Build project
               run: dotnet build ContactKeeper.csproj

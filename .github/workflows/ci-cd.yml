@@ -14,19 +14,18 @@ jobs:
         steps:
             - name: Checkout code
               uses: actions/checkout@v2
-
-            - name: List files
-              run: ls -R
-
+           
             - name: Setup dotnet 8.0
               uses: actions/setup-dotnet@v1
               with:
                 dotnet-version: '8.0'          
              
+            - name: Clean build artifacts
+              run: dotnet clean ./ContactKeeper/ContactKeeper.csproj
+            
             - name: Install dependencies
               run: dotnet restore ContactKeeper.csproj
-              
-
+      
             - name: Run tests
               run: dotnet test ./ContactKeeper.Test/ContactKeeper.Test.csproj --no-build --verbosity normal
             

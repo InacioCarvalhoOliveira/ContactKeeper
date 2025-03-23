@@ -23,7 +23,7 @@ jobs:
                 dotnet-version: '8.0'  
 
             - name: Export ASPNETCORE_ENVIRONMENT
-              run: echo "${{ secrets.ENV_DEVOPS }}" >> $GITHUB_ENV
+              run: echo "ASPNETCORE_ENVIRONMENT=${{ secrets.ENV_DEVOPS }}" >> $GITHUB_ENV
 
             - name: Clean build artifacts
               run: dotnet clean ContactKeeper.csproj

@@ -26,20 +26,24 @@ jobs:
               run: echo "ASPNETCORE_ENVIRONMENT=${{ secrets.ENV_DEVOPS }}" >> $GITHUB_ENV
 
             - name: Clean build artifacts
-              run: dotnet clean ContactKeeper.csproj
-            
-            - name: Install dependencies
-              run: dotnet restore ContactKeeper.csproj
-      
+              run: dotnet clean ContactKeeper.csproj           
+          
+            #on linux  
             - name: Build project 
               env:
-                ASPNETCORE_ENVIRONMENT: ${{ secrets.ENV_DEVOPS }}
-              run: dotnet build ContactKeeper.csproj -c Release --no-launch-profile            
-    
+                export ASPNETCORE_ENVIRONMENT: ${{ secrets.ENV_DEVOPS }}
+              run: dotnet build ContactKeeper.csproj -c Release --no-launch-profile 
+              
+            #on windows
+            #- name: Build project
+            #  env:
+            #    $env:ASPNETCORE_ENVIRONMENT: ${{ secrets.ENV_DEVOPS }}    
+            #  run: dotnet build ContactKeeper.csproj -c Release --no-launch-profile 
+
             - name: Run tests
               env:
                 DOTNET_CLI_TELEMETRY_OPTOUT: 1
                 DOTNET_NOLOGO: true
                 ASPNETCORE_ENVIRONMENT: ${{ secrets.ENV_DEVOPS }}                
-              run: dotnet test ./ContactKeeper.Test/ContactKeeper.Test.csproj --configuration Release --verbosity normal --no-launch-profile
-           
+              run: dotnet test ./ContactKeeper.Test/ContactKeeper.Test.csproj --configuration Release --verbosity normal 
+              

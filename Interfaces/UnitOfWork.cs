@@ -1,7 +1,9 @@
 using System.Drawing;
 using ContactKeeper.Contracts;
 using ContactKeeper.Data;
+using ContactKeeper.Models;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Options;
 
 namespace ContactKeeper.Interfaces
 {
@@ -11,10 +13,10 @@ namespace ContactKeeper.Interfaces
         private readonly IuserRepository _userRepository;
         private IDbContextTransaction _transaction;
 
-        public UnitOfWork(IConfiguration configuration,
-         DataContext context,
-         IuserRepository userRepository
-         ) : base(configuration)
+       public UnitOfWork(IOptions<DatabaseSettings> 
+        databaseSettings,
+        DataContext context,
+        IuserRepository userRepository) : base(databaseSettings)
         {
             _context = context;
             _userRepository = userRepository;

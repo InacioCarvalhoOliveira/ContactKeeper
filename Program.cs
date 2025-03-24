@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Annotations;
 using Microsoft.OpenApi.Any;
+using ContactKeeper.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,27 +51,29 @@ builder.Services.AddScoped<UnitOfWork>();
 builder.Services.AddScoped<IunitOfWork, UnitOfWork>();
 builder.Services.AddScoped<DataContext>();
 builder.Services.AddScoped<DbSession>();
+builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("DatabaseSettings"));
 builder.Services.AddMemoryCache();
-
-var app = builder.Build();
 
 builder.Services.AddDbContext<DataContext>(options =>
 {
+    var databaseSettings = builder.Configuration.GetSection("DatabaseSettings").Get<DatabaseSettings>();
+
     if (builder.Environment.IsDevelopment())
     {
-        // Usa a string de conexão para desenvolvimento
-        //$env:ASPNETCORE_ENVIRONMENT="Development" definida padrao
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DevelopmentConnection"));
-        app.UseDeveloperExceptionPage();
+        // Use the development connection string
+        options.UseSqlServer(databaseSettings?.DevelopmentConnection);
     }
     else
     {
-        // Usa a string de conexão para produção
-        options.UseSqlServer(builder.Configuration.GetConnectionString("ProductionConnection"));
+        // Use the production connection string
+        options.UseSqlServer(databaseSettings?.ProductionConnection);
     }
 });
 
-// Configure the HTTP request pipeline.
+var app = builder.Build();
+
+Console.WriteLine($"Current Environment: {builder.Environment.EnvironmentName}");
+
 if (app.Environment.IsDevelopment())
 {
      app.UseDeveloperExceptionPage();

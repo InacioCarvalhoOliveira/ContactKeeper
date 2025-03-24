@@ -1,23 +1,27 @@
 using System.Data;
 using System.Data.SqlTypes;
+using ContactKeeper.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 namespace ContactKeeper.Data
 {
     
     public class DbSession : IDisposable
     {
-        
-        public IConfiguration Configuration { get; }
+       // private readonly DataContext context;
+
+        // public IConfiguration Configuration { get; }
         public IDbConnection Connection { get; set; }
         public IDbTransaction Transaction { get; set; }
-        public DbSession(IConfiguration configuration)
+        public DbSession(IOptions<DatabaseSettings> databaseSettings)
         {
-            Configuration = configuration;
-            Connection = new SqlConnection(Configuration.GetConnectionString("connectionString"))  ;
+            var connectionString = databaseSettings.Value.ConnectionString;
+            Connection = new SqlConnection(connectionString);
             Connection.Open();
         }
-         public void BeginTransaction()
+
+        public void BeginTransaction()
         {
             Transaction = Connection.BeginTransaction();
         }

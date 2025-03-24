@@ -32,7 +32,7 @@ jobs:
             - name: Build project 
               env:
                 export ASPNETCORE_ENVIRONMENT: ${{ secrets.ENV_DEVOPS }}
-              run: dotnet build ContactKeeper.csproj -c Release --no-launch-profile 
+              run: dotnet build ContactKeeper.csproj -c Release  
               
             #on windows
             #- name: Build project

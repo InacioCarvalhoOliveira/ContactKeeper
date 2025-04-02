@@ -26,13 +26,13 @@ jobs:
             - name: Build and push Docker image
               uses: docker/build-push-action@v2
               with:
-                context: .
+                #context: .
                 #file: ./Dockerfile
                 tags: ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-db:latest
                 push: true
                 cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-db:cache
                 cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-db:cache,mode=max
-
+              
             - name: Setup dotnet 8.0
               uses: actions/setup-dotnet@v1
               with:

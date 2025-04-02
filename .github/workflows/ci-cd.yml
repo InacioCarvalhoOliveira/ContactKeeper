@@ -33,6 +33,7 @@ jobs:
               uses: docker/build-push-action@v2
               with:
                   context: .
+                  file: ./Dockerfile
                   tags: ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-db:latest
                   push: true
                   cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-db:cache-${{ github.ref }}

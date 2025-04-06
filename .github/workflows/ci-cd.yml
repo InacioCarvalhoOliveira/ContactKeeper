@@ -1,5 +1,3 @@
-# I still thinking in change server for onpremises, but i will do it later
-
 name: ci-cd pipeline
 
 on:
@@ -11,74 +9,62 @@ on:
       - main
 
 jobs:
-    build-and-test:
-        runs-on: ubuntu-latest                    
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v2
-           
-            - name: Set up Docker Buildx
-              uses: docker/setup-buildx-action@v2
-              with:
-                driver: docker-container  # Required for registry caching
-                install: true
+  build-and-test:
+    runs-on: ubuntu-latest                    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-            - name: docker login
-              uses: docker/login-action@v2
-              with:             
-                username: ${{ secrets.DOCKER_USERNAME }}
-                password: ${{ secrets.DOCKER_PASSWORD }}
-            
-            - name: Build and push Docker image
-              uses: docker/build-push-action@v2
-              with:
-                  context: .
-                  file: ./Dockerfile
-                  tags: ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-db:latest
-                  push: true
-                  #cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-db:cache-${{ github.ref }}
-                  #cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-db:cache-${{ github.ref }},mode=max
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          driver: docker-container
+          install: true
 
-                  # Add these flags for Azure/GCR compatibility
-                  build-args: |
-                    BUILDKIT_INLINE_CACHE=1
+      - name: docker login
+        uses: docker/login-action@v2
+        with:             
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-              
-            - name: Setup dotnet 8.0
-              uses: actions/setup-dotnet@v1
-              with:
-                dotnet-version: '8.0'  
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          tags: ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-db:latest
+          push: true  # Fixed here
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
 
-            - name: Export ASPNETCORE_ENVIRONMENT
-              run: echo "ASPNETCORE_ENVIRONMENT=${{ secrets.ENV_DEVOPS }}" #>> $GITHUB_ENV
+      - name: Setup dotnet 8.0
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '8.0'  
 
-            - name: Clean build artifacts
-              run: dotnet clean ContactKeeper.csproj           
-          
-            #on linux  
-            - name: Build project 
-              env:
-                export ASPNETCORE_ENVIRONMENT: ${{ secrets.ENV_DEVOPS }}
-              run: dotnet build ContactKeeper.csproj -c Release  
-              
-            #on windows
+      - name: Export ASPNETCORE_ENVIRONMENT
+        run: echo "ASPNETCORE_ENVIRONMENT=${{ secrets.ENV_DEVOPS }}" >> $GITHUB_ENV
+
+      - name: Clean build artifacts
+        run: dotnet clean ContactKeeper.csproj           
+
+      - name: Build project 
+        env:
+          ASPNETCORE_ENVIRONMENT: ${{ secrets.ENV_DEVOPS }}
+        run: dotnet build ContactKeeper.csproj -c Release  
+
+ #on windows
             #- name: Build project
             #  env:
             #    $env:ASPNETCORE_ENVIRONMENT: ${{ secrets.ENV_DEVOPS }}    
             #  run: dotnet build ContactKeeper.csproj -c Release --no-launch-profile 
 
-            - name: Run tests
-              env:
-                DOTNET_CLI_TELEMETRY_OPTOUT: 1
-                DOTNET_NOLOGO: true
-                ASPNETCORE_ENVIRONMENT: ${{ secrets.ENV_DEVOPS }}                
-              run: dotnet test ./ContactKeeper.Test/ContactKeeper.Test.csproj --configuration Release --verbosity normal
+      - name: Run tests
+        env:
+          DOTNET_CLI_TELEMETRY_OPTOUT: 1
+          DOTNET_NOLOGO: true
+          ASPNETCORE_ENVIRONMENT: ${{ secrets.ENV_DEVOPS }}                
+        run: dotnet test ./ContactKeeper.Test/ContactKeeper.Test.csproj --configuration Release --verbosity normal
 
-            - name: Build and push Docker image
-              uses: docker/build-push-action@v2
-              with:
-                context: .
-                tags: ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-db:latest
-                push: 
 
 

@@ -36,12 +36,12 @@ jobs:
                   file: ./Dockerfile
                   tags: ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-db:latest
                   push: true
-                  cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-db:cache-${{ github.ref }}
-                  cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-db:cache-${{ github.ref }},mode=max
+                  #cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-db:cache-${{ github.ref }}
+                  #cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-db:cache-${{ github.ref }},mode=max
 
                   # Add these flags for Azure/GCR compatibility
-                  build-args: |
-                    BUILDKIT_INLINE_CACHE=1
+                  #build-args: |
+                    #BUILDKIT_INLINE_CACHE=1
 
               
             - name: Setup dotnet 8.0

@@ -40,9 +40,5 @@ EXPOSE 5000
 # Configura a URL da porta
 ENV ASPNETCORE_URLS=http://+:5000
 
-# Configura o fuso horário para America/Sao_Paulo
-ENV TZ=America/Sao_Paulo
-RUN apt-get update && apt-get install -y tzdata && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-
 # Define o ponto de entrada para a aplicação
 ENTRYPOINT ["dotnet", "ContactKeeper.dll"]

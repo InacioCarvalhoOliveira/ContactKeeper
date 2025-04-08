@@ -1,41 +1,48 @@
 # Primeira etapa: Build da aplicação
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
-# Set the working directory in the container
+# Define o diretório de trabalho no container
 WORKDIR /app
 
-# Copy the .csproj files
+# Copia os arquivos .csproj para o container
 COPY *.csproj ./
 
-# Restore NuGet packages
-RUN dotnet restore
+# Restaura os pacotes NuGet
+RUN dotnet restore --disable-parallel
 
-# Copy the rest of the application code
+# Copia o restante do código da aplicação
 COPY . .
 
-# Clean build artifacts
+# Limpa os artefatos de build
 RUN dotnet clean ContactKeeper.csproj
 
-# Build the application
+# Compila a aplicação
 RUN dotnet build ContactKeeper.csproj -c Release
 
-# Publish the application
-RUN dotnet publish -c Release -o out
+# Publica a aplicação
+RUN dotnet publish -c Release -o out --no-restore
 
-# Use the official .NET runtime image as a base for the final image
+# Segunda etapa: Criação da imagem final
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 
-# Set the working directory in the container
+# Define o diretório de trabalho no container
 WORKDIR /app
 
-# Copy the published application from the build layer
+# Copia a aplicação publicada da camada de build
 COPY --from=build /app/out .
 
-# Set environment variables for runtime
+# Configura as variáveis de ambiente para o runtime
 ENV ASPNETCORE_ENVIRONMENT=Development
 
-# Set port url
-ENV ASPNETCORE_URLS=http://*:80
+# Exposição da porta
+EXPOSE 5000
 
-# Set the entry point for the application
+# Configura a URL da porta
+ENV ASPNETCORE_URLS=http://+:5000
+
+# Configura o fuso horário para America/Sao_Paulo
+ENV TZ=America/Sao_Paulo
+RUN apt-get update && apt-get install -y tzdata && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# Define o ponto de entrada para a aplicação
 ENTRYPOINT ["dotnet", "ContactKeeper.dll"]

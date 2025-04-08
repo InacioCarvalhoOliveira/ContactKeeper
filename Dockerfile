@@ -34,5 +34,8 @@ COPY --from=build /app/out .
 # Set environment variables for runtime
 ENV ASPNETCORE_ENVIRONMENT=Development
 
+# Set port url
+ENV ASPNETCORE_URLS=http://*:80
+
 # Set the entry point for the application
 ENTRYPOINT ["dotnet", "ContactKeeper.dll"]

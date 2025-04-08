@@ -20,7 +20,7 @@ RUN dotnet clean ContactKeeper.csproj
 RUN dotnet build ContactKeeper.csproj -c Release
 
 # Publica a aplicação
-RUN dotnet publish -c Release -o out --no-restore
+RUN dotnet publish -c Release -o out 
 
 # Segunda etapa: Criação da imagem final
 FROM mcr.microsoft.com/dotnet/aspnet:8.0

@@ -1,4 +1,4 @@
-# Use the official .NET SDK image as a base
+# Primeira etapa: Build da aplicação
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 # Set the working directory in the container

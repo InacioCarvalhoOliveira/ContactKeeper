@@ -52,7 +52,7 @@ WORKDIR /app
 COPY *.csproj ./
 RUN dotnet restore --disable-parallel
 COPY . .
-RUN dotnet publish -c Release -o out /p:IsTestProject=false
+RUN dotnet publish -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app

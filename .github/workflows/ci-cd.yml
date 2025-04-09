@@ -32,7 +32,7 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          tags: ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-db:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-api:latest
           push: true  # Fixed here
           build-args: |
             BUILDKIT_INLINE_CACHE=1
@@ -58,8 +58,9 @@ jobs:
             #  env:
             #    $env:ASPNETCORE_ENVIRONMENT: ${{ secrets.ENV_DEVOPS }}    
             #  run: dotnet build ContactKeeper.csproj -c Release --no-launch-profile 
+            
       - name: Run Docker container
-        run: docker run -d -p 5000:5000 --name contactkeeper ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-db:lates
+        run: docker run -d -p 5000:5000 --name contactkeeper ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-api:lates
             
       - name: Run tests
         env:

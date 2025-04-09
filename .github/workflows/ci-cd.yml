@@ -1,73 +1,48 @@
-  name: ci-cd pipeline
+name: ci-cd pipeline
 
-  on:
-    push:
-      branches:
-        - devops
-    pull_request:
-      branches:
-        - main
+on:
+  push:
+    branches:
+      - devops
+  pull_request:
+    branches:
+      - main
 
-  jobs:
-    build-and-test:
-      runs-on: ubuntu-latest                    
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v2
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest                    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-        - name: Set up Docker Buildx
-          uses: docker/setup-buildx-action@v2
-          with:
-            driver: docker-container
-            install: true
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          driver: docker-container
+          install: true
 
-        - name: docker login
-          uses: docker/login-action@v2
-          with:             
-            username: ${{ secrets.DOCKER_USERNAME }}
-            password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: docker login
+        uses: docker/login-action@v2
+        with:             
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-        - name: Build and push Docker image
-          uses: docker/build-push-action@v2
-          with:
-            context: .
-            file: ./Dockerfile
-            tags: ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-db:latest
-            push: true  # Fixed here
-            build-args: |
-              BUILDKIT_INLINE_CACHE=1
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          tags: ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-api:latest
+          push: true  
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
 
-        - name: Setup dotnet 8.0
-          uses: actions/setup-dotnet@v1
-          with:
-            dotnet-version: '8.0'  
+      - name: Run tests
+        env:
+          DOTNET_CLI_TELEMETRY_OPTOUT: 1
+          DOTNET_NOLOGO: true
+          ASPNETCORE_ENVIRONMENT: ${{ secrets.ENV_DEVOPS }}                
+        run: dotnet test ./ContactKeeper.Test/ContactKeeper.Test.csproj --configuration Release --verbosity normal
 
-        - name: Export ASPNETCORE_ENVIRONMENT
-          run: echo "ASPNETCORE_ENVIRONMENT=${{ secrets.ENV_DEVOPS }}" >> $GITHUB_ENV
-
-        - name: Clean build artifacts
-          run: dotnet clean ContactKeeper.csproj           
-
-        - name: Build project 
-          env:
-            ASPNETCORE_ENVIRONMENT: ${{ secrets.ENV_DEVOPS }}
-          run: dotnet build ContactKeeper.csproj -c Release  
-
-  #on windows
-              #- name: Build project
-              #  env:
-              #    $env:ASPNETCORE_ENVIRONMENT: ${{ secrets.ENV_DEVOPS }}    
-              #  run: dotnet build ContactKeeper.csproj -c Release --no-launch-profile 
-              
-        - name: Run Docker container
-          run: docker run -d -p 5000:5000 --name contactkeeper ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-db:latest
-            
-              
-        - name: Run tests
-          env:
-            DOTNET_CLI_TELEMETRY_OPTOUT: 1
-            DOTNET_NOLOGO: true
-            ASPNETCORE_ENVIRONMENT: ${{ secrets.ENV_DEVOPS }}                
-          run: dotnet test ./ContactKeeper.Test/ContactKeeper.Test.csproj --configuration Release --verbosity normal
-
-
+      - name: Run Docker container
+        run: docker run -d -p 5000:5000 --name contactkeeper ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-api:latest

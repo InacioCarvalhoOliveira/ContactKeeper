@@ -32,7 +32,7 @@
           with:
             context: .
             file: ./Dockerfile
-            tags: ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-api:latest
+            tags: ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-db:latest
             push: true  # Fixed here
             build-args: |
               BUILDKIT_INLINE_CACHE=1
@@ -60,7 +60,7 @@
               #  run: dotnet build ContactKeeper.csproj -c Release --no-launch-profile 
               
         - name: Run Docker container
-          run: docker run -d -p 5000:5000 --name contactkeeper ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-api:latest
+          run: docker run -d -p 5000:5000 --name contactkeeper ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-db:latest
             
               
         - name: Run tests

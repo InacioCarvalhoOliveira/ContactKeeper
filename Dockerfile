@@ -47,17 +47,30 @@
 # # Define o ponto de entrada para a aplicação
 # ENTRYPOINT ["dotnet", "ContactKeeper.dll"]
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /app
-COPY *.csproj ./
-RUN dotnet restore --disable-parallel
-COPY . .
-RUN dotnet publish -c Release -o out
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+# Build Stage
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+
 WORKDIR /app
+
+# Copy project files and restore dependencies
+COPY *.csproj ./
+RUN dotnet restore --disable-parallel --no-cache
+
+# Copy remaining source code and publish
+COPY . .
+RUN dotnet publish "ContactKeeper.csproj" -c Release -o out
+
+# Runtime Stage
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+
+WORKDIR /app
+
 COPY --from=build /app/out .
+
 ENV ASPNETCORE_ENVIRONMENT=Development
 EXPOSE 5000
 ENV ASPNETCORE_URLS=http://+:5000
+
 ENTRYPOINT ["dotnet", "ContactKeeper.dll"]
+

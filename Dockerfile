@@ -56,6 +56,7 @@ WORKDIR /app
 # Copy project files and restore dependencies
 COPY *.csproj ./
 RUN dotnet restore --disable-parallel --no-cache
+RUN dotnet dev-certs https --trust
 
 # Copy remaining source code and publish
 COPY . .

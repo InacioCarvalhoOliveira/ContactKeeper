@@ -89,21 +89,19 @@ else{
     app.UseHsts();
 }
 
-app.UseRouting();
-app.UseSwagger();
 app.UseSwaggerUI(c => 
 {
 c.SwaggerEndpoint("/swagger/v1/swagger.json", "ContactKeeper API v1");
 c.RoutePrefix = string.Empty;
 
-});
-
-    
-
-app.MapControllers();
-app.UseCors("AllowAll");
+});   
 
 app.UseHttpsRedirection();
+app.UseRouting();
+app.UseSwagger();
+app.MapControllers();
+app.UseCors("AllowAll");
 app.UseReDoc();
+
 app.Run();
 

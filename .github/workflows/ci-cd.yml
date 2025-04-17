@@ -31,7 +31,7 @@ jobs:
         run: |
               docker run -d --name sqlserver -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=${{ secrets.SQL_SERVER_PASSWORD }}" -p 1433:1433 mcr.microsoft.com/mssql/server:2019-latest
               sleep 15 # Wait for SQL Server to start
-              docker exec -i sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "CREATE DATABASE ContactKeeper;"
+              docker exec -i sqlserver app/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "CREATE DATABASE ContactKeeper;"
         
       # - name: Set database connection string
       #   run: echo "SQL_SERVER_CONNECTION_STRING=${{ secrets.SQL_SERVER_CONNECTION_STRING }}"   

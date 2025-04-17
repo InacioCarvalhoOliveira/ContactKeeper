@@ -77,5 +77,5 @@ ENV ASPNETCORE_ENVIRONMENT=Development
 EXPOSE 5000
 ENV ASPNETCORE_URLS=http://+:5000
 
-ENTRYPOINT ["dotnet", "dotnet ef database update && dotnet ContactKeeper.dll"]
+ENTRYPOINT ["dotnet", "ContactKeeper.dll"]
 

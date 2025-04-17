@@ -40,6 +40,17 @@ jobs:
                   ln -s /opt/mssql-tools/bin/sqlcmd /usr/bin/sqlcmd"
                 docker exec -i sqlserver sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "CREATE DATABASE ContactKeeper;"
 
+      
+      - name: Run EF Core migrations
+        run: |
+          docker run --rm --network host \
+            -e "ConnectionStrings__DefaultConnection=Server=localhost,1433;Database=ContactKeeper;User Id=sa;Password=${{ secrets.SQL_SERVER_PASSWORD }};" \
+            -v ${{ github.workspace }}:/src \
+            -w /src \
+            mcr.microsoft.com/dotnet/sdk:8.0 \
+            dotnet ef database update --project ContactKeeper/ContactKeeper.csproj
+                
+      
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:

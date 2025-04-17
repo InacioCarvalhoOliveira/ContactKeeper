@@ -64,9 +64,6 @@ RUN dotnet tool install --global dotnet-ef
 # Copy remaining source code and publish
 COPY . .
 
-# Run EF Core migrations
-RUN dotnet ef migrations add initialCreate 
-
 RUN dotnet publish "ContactKeeper.csproj" -c Release -o out
 
 # Runtime Stage

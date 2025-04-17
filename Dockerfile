@@ -61,9 +61,6 @@ RUN dotnet dev-certs https --trust
 # Install dotnet-ef tool globally
 RUN dotnet tool install --global dotnet-ef
 
-# Add the EF Core Design package
-RUN dotnet add package Microsoft.EntityFrameworkCore.Design
-
 # Copy remaining source code and publish
 COPY . .
 
@@ -83,5 +80,5 @@ ENV ASPNETCORE_ENVIRONMENT=Development
 EXPOSE 5000
 ENV ASPNETCORE_URLS=http://+:5000
 
-ENTRYPOINT ["dotnet", "ContactKeeper.dll"]
+ENTRYPOINT ["dotnet", "dotnet ef database upsate && dotnet ContactKeeper.dll"]
 

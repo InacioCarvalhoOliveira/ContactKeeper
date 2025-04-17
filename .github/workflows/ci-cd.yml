@@ -26,6 +26,15 @@ jobs:
         with:             
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+          
+      - name: Set up SQL Server
+        run: |
+              docker run -d --name sqlserver -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=${{ secrets.SQL_SERVER_PASSWORD }}" -p 1433:1433 mcr.microsoft.com/mssql/server:2019-latest
+              sleep 15 # Wait for SQL Server to start
+              docker exec -i sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "CREATE DATABASE ContactKeeper;"
+        
+      # - name: Set database connection string
+      #   run: echo "SQL_SERVER_CONNECTION_STRING=${{ secrets.SQL_SERVER_CONNECTION_STRING }}"   
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
@@ -35,7 +44,8 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-api:latest
           push: true  
           build-args: |
-            BUILDKIT_INLINE_CACHE=1
+                       BUILDKIT_INLINE_CACHE=1
+          
 
       - name: Run tests
         env:

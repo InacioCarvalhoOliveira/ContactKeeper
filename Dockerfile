@@ -58,8 +58,18 @@ COPY *.csproj ./
 RUN dotnet restore --disable-parallel --no-cache
 RUN dotnet dev-certs https --trust
 
+# Install dotnet-ef tool globally
+RUN dotnet tool install --global dotnet-ef
+
+# Add the EF Core Design package
+RUN dotnet add package Microsoft.EntityFrameworkCore.Design
+
 # Copy remaining source code and publish
 COPY . .
+
+# Run EF Core migrations
+RUN dotnet ef migrations add initialCreate 
+
 RUN dotnet publish "ContactKeeper.csproj" -c Release -o out
 
 # Runtime Stage

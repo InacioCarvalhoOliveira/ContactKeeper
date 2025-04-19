@@ -50,13 +50,20 @@ jobs:
             -d mcr.microsoft.com/mssql/server:2022-latest
               
       - name: "[5] Install sqlcmd and initialize database"
-        run: |                      
-           docker exec -i sqlserver sqlcmd \
-             -S localhost \
-             -U sa \
-             -P ${{ secrets.SQL_SERVER_PASSWORD }} \
-             -Q "USE master;
-                 CREATE DATABASE ContactKeeper;"
+        run: |
+          docker exec -u root sqlserver bash -c "apt-get update && \
+            apt-get install -y gnupg curl apt-transport-https && \
+            curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
+            curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
+            apt-get update && \
+            ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev && \
+            ln -s /opt/mssql-tools/bin/sqlcmd /usr/bin/sqlcmd"
+          docker exec -i sqlserver sqlcmd \
+            -S localhost \
+            -U sa \
+            -P ${{ secrets.SQL_SERVER_PASSWORD }} \
+            -Q "USE master;
+                CREATE DATABASE ContactKeeper;"
 
       
       - name: Build and push Docker image

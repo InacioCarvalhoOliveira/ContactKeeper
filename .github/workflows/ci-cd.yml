@@ -39,10 +39,9 @@ jobs:
       #             ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev && \
       #             ln -s /opt/mssql-tools/bin/sqlcmd /usr/bin/sqlcmd"
       #           docker exec -i sqlserver sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "CREATE DATABASE ContactKeeper;"
-      
+
       - name: "[4] Set up SQL Server"
         run: |
-          docker volume create sqlserver-data
           docker run -d \
             --name sqlserver \ 
             -e "ACCEPT_EULA= Y" \

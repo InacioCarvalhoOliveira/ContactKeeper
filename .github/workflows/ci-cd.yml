@@ -40,18 +40,7 @@ jobs:
       #             ln -s /opt/mssql-tools/bin/sqlcmd /usr/bin/sqlcmd"
       #           docker exec -i sqlserver sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "CREATE DATABASE ContactKeeper;"
 
-      - name: "[4] Install sqlcmd and initialize database"
-        run: |
-           sleep 15
-           docker pull mcr.microsoft.com/mssql/server:2022-latest
-           docker exec -i sqlserver sqlcmd \
-             -S localhost \
-             -U sa \
-             -P ${{ secrets.SQL_SERVER_PASSWORD }} \
-             -Q "USE master;
-                 CREATE DATABASE ContactKeeper;"
-
-      - name: "[5] Set up SQL Server"
+      - name: "[4] Set up SQL Server"
         run: |
           docker run \
             --name sqlserver \
@@ -60,6 +49,15 @@ jobs:
             -p 1433:1433 \
             -d mcr.microsoft.com/mssql/server:2022-latest
               
+      - name: "[5] Install sqlcmd and initialize database"
+        run: |                      
+           docker exec -i sqlserver sqlcmd \
+             -S localhost \
+             -U sa \
+             -P ${{ secrets.SQL_SERVER_PASSWORD }} \
+             -Q "USE master;
+                 CREATE DATABASE ContactKeeper;"
+
       
       - name: Build and push Docker image
         uses: docker/build-push-action@v2

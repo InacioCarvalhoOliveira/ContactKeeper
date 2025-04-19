@@ -54,13 +54,13 @@ jobs:
         run: |
             sleep 15
             docker exec -u root sqlserver bash -c "apt-get update && \
-              apt-get install -y --fix-broken curl apt-transport-https gnupg && \
+              apt-get isntall -y gnupg curl apt-transport-https && \
               curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
               curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
               apt-get update && \
               ACCEPT_EULA=Y apt-get install -y --fix-broken mssql-tools unixodbc-dev && \
               ln -s /opt/mssql-tools/bin/sqlcmd /usr/bin/sqlcmd"
-            docker exec -i sqlserver /opt/mssql-tools/bin/sqlcmd \
+            docker exec -i sqlserver sqlcmd \
               -S localhost \
               -U sa \
               -P ${{ secrets.SQL_SERVER_PASSWORD }} \

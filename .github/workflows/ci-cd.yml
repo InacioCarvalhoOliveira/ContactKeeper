@@ -54,6 +54,7 @@ jobs:
         run: |
             sleep 15
             docker exec -u root sqlserver bash -c "apt-get update && \
+              apt-get remove -y libodbc2 libodbcinst2 && \
               apt-get install -y gnupg curl apt-transport-https && \
               curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
               curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list && \

@@ -48,23 +48,34 @@ jobs:
             -e "MSSQL_SA_PASSWORD=${{ secrets.SQL_SERVER_PASSWORD }}" \
             -p 1433:1433 \
             -d mcr.microsoft.com/mssql/server:2022-latest
-              
+
       - name: "[5] Install sqlcmd and initialize database"
         run: |
-          docker exec -u root sqlserver bash -c "apt-get update && \
-            apt-get install -y gnupg curl apt-transport-https && \
-            curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
-            curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
-            apt-get update && \
-            ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev && \
-            ln -s /opt/mssql-tools/bin/sqlcmd /usr/bin/sqlcmd"
-          docker exec -i sqlserver sqlcmd \
-            -S localhost \
-            -U sa \
-            -P ${{ secrets.SQL_SERVER_PASSWORD }} \
-            -Q "USE master;
-                CREATE DATABASE ContactKeeper;"
+           sleep 15
+           docker exec -u root sqlserver bash -c "apt-get update && \
+             apt-get remove -y libodbc2 libodbcinst2 unixodbc-common && \
+             apt-get install -y gnupg curl apt-transport-https && \
+             curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
+             curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
+             apt-get update && \
+             ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev && \
+             ln -s /opt/mssql-tools/bin/sqlcmd /usr/bin/sqlcmd"
+           docker exec -i sqlserver sqlcmd \
+             -S localhost \
+             -U sa \
+             -P ${{ secrets.SQL_SERVER_PASSWORD }} \
+             -Q "USE master; CREATE DATABASE ContactKeeper;"
 
+        
+      # - name: "[6] Run EF Core migrations"
+      #   run: |
+      #     docker run --rm --network host \
+      #       -e "ConnectionStrings__DefaultConnection=Server=localhost,1433;Database=ContactKeeper;User Id=sa;Password=${{ secrets.SQL_SERVER_PASSWORD }};" \
+      #       -v ${{ github.workspace }}:/src \
+      #       -w /src \
+      #       mcr.microsoft.com/dotnet/sdk:8.0 \
+      #       dotnet ef database update --project ContactKeeper/ContactKeeper.csproj
+                
       
       - name: Build and push Docker image
         uses: docker/build-push-action@v2

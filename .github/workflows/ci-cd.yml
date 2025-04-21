@@ -32,10 +32,11 @@ jobs:
       - name: "[4] Set up SQL Server"
         run: |
           docker pull mcr.microsoft.com/mssql/server:2022-latest 
-          docker run -d --name sqlserver \
+          docker run --name sqlserver \
             -e "ACCEPT_EULA=Y" \
-            -e "SA_PASSWORD=${{ secrets.SQL_SERVER_PASSWORD }}" \
-            -p 1433:1433 mcr.microsoft.com/mssql/server:2022-latest
+            -e "MSSQL_SA_PASSWORD=${{ secrets.SQL_SERVER_PASSWORD }}" \
+            -p 1433:1433 \
+            -d mcr.microsoft.com/mssql/server:2022-latest
       
           # Instala o sqlcmd dentro do container
           docker exec -u root sqlserver bash -c "apt-get update && \

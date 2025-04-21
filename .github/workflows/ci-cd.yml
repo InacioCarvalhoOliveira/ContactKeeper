@@ -76,8 +76,8 @@ jobs:
           #  ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev && \
           #  ln -s /opt/mssql-tools/bin/sqlcmd /usr/bin/sqlcmd"
 
-          # docker exec -i sqlserver sqlcmd \
-           docker exec sqlserver /opt/mssql-tools/bin/sqlcmd \
+          # docker exec sqlserver /opt/mssql-tools/bin/sqlcmd \
+          docker exec -i sqlserver sqlcmd \
              -S localhost \
              -U sa \
              -P ${{ secrets.SQL_SERVER_PASSWORD }} \

@@ -26,10 +26,46 @@ jobs:
         with:             
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-            
+          
+
+
+      - name: "[4] Set up SQL Server"
+        run: |
+          docker pull mcr.microsoft.com/mssql/server:2022-latest 
+          docker run -d --name sqlserver \
+            -e "ACCEPT_EULA=Y" \
+            -e "SA_PASSWORD=${{ secrets.SQL_SERVER_PASSWORD }}" \
+            -p 1433:1433 mcr.microsoft.com/mssql/server:2022-latest
+      
+          # Instala o sqlcmd dentro do container
+          docker exec -u root sqlserver bash -c "apt-get update && \
+            apt-get install -y gnupg curl apt-transport-https && \
+            curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
+            curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
+            apt-get update && \
+            ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev && \
+            ln -s /opt/mssql-tools/bin/sqlcmd /usr/bin/sqlcmd"
+      
+          # Loop para aguardar o SQL Server ficar pronto
+          for i in {1..30}; do
+            if docker exec sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "SELECT 1" > /dev/null 2>&1; then
+              echo "SQL Server is ready!";
+              break;
+            fi
+            echo "Waiting for SQL Server...";
+            sleep 2;
+          done
+      
+          # Cria o banco de dados
+          docker exec -i sqlserver sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "USE master; CREATE DATABASE ContactKeeper;"
+          
       # - name: "[4] Set up SQL Server"
       #   run: |
-      #          docker run -d --name sqlserver -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=${{ secrets.SQL_SERVER_PASSWORD }}" -p 1433:1433 mcr.microsoft.com/mssql/server:2019-latest
+      #          docker pull mcr.microsoft.com/mssql/server:2022-latest 
+      #          docker run -d --name sqlserver \
+      #           -e "ACCEPT_EULA=Y" \
+      #           -e "SA_PASSWORD=${{ secrets.SQL_SERVER_PASSWORD }}" \
+      #           -p 1433:1433 mcr.microsoft.com/mssql/server:2022-latest
       #          sleep 15 # Wait for SQL Server to start
       #          docker exec -u root sqlserver bash -c "apt-get update && \
       #             apt-get install -y gnupg curl apt-transport-https && \

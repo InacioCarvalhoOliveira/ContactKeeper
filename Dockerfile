@@ -23,8 +23,6 @@ WORKDIR /app
 COPY --from=build /app/out .
 
 ENV ASPNETCORE_ENVIRONMENT=Development
-RUN dotnet dev-certs https --clean
-RUN dotnet dev-certs https --trust
 EXPOSE 5000
 ENV ASPNETCORE_URLS=http://+:5000
 

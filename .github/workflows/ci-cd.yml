@@ -40,50 +40,51 @@ jobs:
       #             ln -s /opt/mssql-tools/bin/sqlcmd /usr/bin/sqlcmd"
       #           docker exec -i sqlserver sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "CREATE DATABASE ContactKeeper;"
 
-      - name: "[4] Set up SQL Server"
-        run: |
-          docker run \
-            --name sqlserver \
-            -e "ACCEPT_EULA=Y" \
-            -e "MSSQL_SA_PASSWORD=${{ secrets.SQL_SERVER_PASSWORD }}" \
-            -p 1433:1433 \
-            -d mcr.microsoft.com/mssql/server:2022-latest
+      # - name: "[4] Set up SQL Server"
+      #   run: |
+      #     docker run \
+      #       --name sqlserver \
+      #       -e "ACCEPT_EULA=Y" \
+      #       -e "MSSQL_SA_PASSWORD=${{ secrets.SQL_SERVER_PASSWORD }}" \
+      #       -e "SA_PASSWORD=${{ secrets.SQL_SERVER_PASSWORD }}" \
+      #       -p 1433:1433 \
+      #       -d mcr.microsoft.com/mssql/server:2022-latest
 
             
-      - name: "[5.2] Install sqlcmd and initialize database"
-        run: |
-          sleep 15
-          docker exec -u root sqlserver bash -c "apt-get update && \
-          apt-get remove -y libodbc2 libodbcinst2 unixodbc-common && \
-          apt-get install -y gnupg curl apt-transport-https && \
-          curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
-          curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
-          apt-get update && \
-          ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev && \
-          ln -s /opt/mssql-tools/bin/sqlcmd /usr/bin/sqlcmd"
+      # - name: "[5.2] Install sqlcmd and initialize database"
+      #   run: |
+      #     sleep 60
+      #     docker exec -u root sqlserver bash -c "apt-get update && \
+      #     apt-get remove -y libodbc2 libodbcinst2 unixodbc-common && \
+      #     apt-get install -y gnupg curl apt-transport-https && \
+      #     curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
+      #     curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
+      #     apt-get update && \
+      #     ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev && \
+      #     ln -s /opt/mssql-tools/bin/sqlcmd /usr/bin/sqlcmd"
           
-          # docker exec sqlserver /opt/mssql-tools/bin/sqlcmd \
-          docker exec -i sqlserver sqlcmd \
-          -S localhost \
-          -U sa \
-          -P ${{ secrets.SQL_SERVER_PASSWORD }} \
-          -Q "USE master; CREATE DATABASE ContactKeeper;"
+      #     # docker exec sqlserver /opt/mssql-tools/bin/sqlcmd \
+      #     docker exec -i sqlserver sqlcmd \
+      #     -S localhost \
+      #     -U sa \
+      #     -P ${{ secrets.SQL_SERVER_PASSWORD }} \
+      #     -Q "USE master; CREATE DATABASE ContactKeeper;"
             
-      - name: "[5.1] Wait for SQL Server to be ready"
-        run: |
-          for i in {1..30}; do
-            if docker exec sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} 
-            -Q "USE ContactKeeper; SELECT 1;" > /dev/null 2>&1; then
-              echo "SQL Server is ready!";
-              break;
-            fi;
-            echo "Waiting for SQL Server...";
-            sleep 2;
-          done
-          if [ $? -ne 0 ]; then
-            echo "SQL Server did not start in time!";
-            exit 1;
-          fi
+      # - name: "[5.1] Wait for SQL Server to be ready"
+      #   run: |
+      #     for i in {1..30}; do
+      #       if docker exec sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} 
+      #       -Q "USE ContactKeeper; SELECT 1;" > /dev/null 2>&1; then
+      #         echo "SQL Server is ready!";
+      #         break;
+      #       fi;
+      #       echo "Waiting for SQL Server...";
+      #       sleep 2;
+      #     done
+      #     if [ $? -ne 0 ]; then
+      #       echo "SQL Server did not start in time!";
+      #       exit 1;
+      #     fi
         
       # - name: "[6] Run EF Core migrations"
       #   run: |

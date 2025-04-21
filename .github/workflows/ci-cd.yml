@@ -49,7 +49,7 @@ jobs:
       
           # Loop para aguardar o SQL Server ficar pronto
           for i in {1..30}; do
-            if docker exec sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "USE contactkeeper; SELECT 1" > /dev/null 2>&1; then
+            if docker exec sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "SELECT 1" > /dev/null 2>&1; then
               echo "SQL Server is ready!";
               break;
             fi

@@ -39,6 +39,15 @@ jobs:
               -e "MSSQL_SA_PASSWORD=${{ secrets.SQL_SERVER_PASSWORD }}" \
               -p 1433:1433 \
               -d mcr.microsoft.com/mssql/server:2022-latest
+
+              sleep 60 
+               docker exec -u root sqlserver bash -c "apt-get update && \
+                  apt-get install -y gnupg curl apt-transport-https && \
+                  curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
+                  curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
+                  apt-get update && \
+                  ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev && \
+                  ln -s /opt/mssql-tools/bin/sqlcmd /usr/bin/sqlcmd"
   
             # Wait for SQL Server to be ready
             for i in {1..30}; do

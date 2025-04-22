@@ -28,38 +28,31 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           
 
-
-      - name: "[4] Set up SQL Server"
+      - name: "[4] Create Docker network"
+        run: docker network create contactkeeper-network
+  
+      - name: "[5] Set up SQL Server"
         run: |
-          docker pull mcr.microsoft.com/mssql/server:2022-latest 
-          docker run --name sqlserver \
-            -e "ACCEPT_EULA=Y" \
-            -e "MSSQL_SA_PASSWORD=${{ secrets.SQL_SERVER_PASSWORD }}" \
-            -p 1433:1433 \
-            -d mcr.microsoft.com/mssql/server:2022-latest
-      
-          # Instala o sqlcmd dentro do container
-          docker exec -u root sqlserver bash -c "apt-get update && \
-             apt-get remove -y libodbc2 libodbcinst2 unixodbc-common && \
-             apt-get install -y gnupg curl apt-transport-https && \
-            curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
-            curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
-            apt-get update && \
-            ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev && \
-            ln -s /opt/mssql-tools/bin/sqlcmd /usr/bin/sqlcmd"
-      
-          # Loop para aguardar o SQL Server ficar pronto
-          for i in {1..30}; do
-            if docker exec sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "SELECT 1" > /dev/null 2>&1; then
-              echo "SQL Server is ready!";
-              break;
-            fi
-            echo "Waiting for SQL Server...";
-            sleep 2;
-          done
-      
-          # Cria o banco de dados
-          docker exec -i sqlserver sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "USE master; CREATE DATABASE ContactKeeper;"
+            docker run --name sqlserver \
+              --network contactkeeper-network \
+              -e "ACCEPT_EULA=Y" \
+              -e "MSSQL_SA_PASSWORD=${{ secrets.SQL_SERVER_PASSWORD }}" \
+              -p 1433:1433 \
+              -d mcr.microsoft.com/mssql/server:2022-latest
+  
+            # Wait for SQL Server to be ready
+            for i in {1..30}; do
+              if docker exec sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "SELECT 1" > /dev/null 2>&1; then
+                echo "SQL Server is ready!";
+                break;
+              fi
+              echo "Waiting for SQL Server...";
+              sleep 2;
+            done
+  
+            # Create the database
+            docker exec -i sqlserver sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "USE master; CREATE DATABASE ContactKeeper;"
+  
           
       # - name: "[4] Set up SQL Server"
       #   run: |
@@ -166,4 +159,9 @@ jobs:
         run: dotnet test ./ContactKeeper.Test/ContactKeeper.Test.csproj --configuration Release --verbosity normal
 
       - name: Run Docker container
-        run: docker run -d -p 5000:5000 --name contactkeeper ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-api:latest
+        run: |
+          docker run --name contactkeeper \
+            --network contactkeeper-network \
+            -p 5000:5000 \
+            -e "ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=ContactKeeper;User Id=sa;Password=${{ secrets.SQL_SERVER_PASSWORD }};" \
+            -d ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-api:latest

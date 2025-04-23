@@ -29,3 +29,6 @@ ENV ASPNETCORE_URLS=http://+:5000
 
 ENTRYPOINT ["dotnet", "ContactKeeper.dll"]
 
+
+
+

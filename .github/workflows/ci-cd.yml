@@ -27,13 +27,16 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           
+          
+  SqlServer-setup:
+    runs-on: ubuntu-latest
+    needs: [Environment-setup]
+    steps:
+
       - name: "[4] Create Docker network"
         run: |
           docker network create contactkeeper-network || true
-      
-  SqlServer-setup:
-    runs-on: ubuntu-latest
-    steps:
+
       - name: "[5] Set up SQL Server"
         run: |
             echo "Starting SQL Server container..."
@@ -80,6 +83,7 @@ jobs:
   
   Build-Dockerfile-setup:
     runs-on: ubuntu-latest
+    needs: [Environment-setup, SqlServer-setup]
     steps:
       - name: Build and push Docker image
         if: success()

@@ -138,8 +138,3 @@ jobs:
             -p 5000:5000 \
             -e "ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=ContactKeeper;User Id=sa;Password=${{ secrets.SQL_SERVER_PASSWORD }};TrustServerCertificate=True;" \
             -d ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-api:latest
-
-
-
-
-            docker run --name sqlserver -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=1q2w3e4r@#$" -p 1433:1433 -d mcr.microsoft.com/mssql/server

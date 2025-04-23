@@ -100,36 +100,40 @@ jobs:
             echo "Creating database..."
             docker exec -i sqlserver sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "CREATE DATABASE ContactKeeper;" || { echo "Failed to create database"; docker logs sqlserver; exit 1; }
       
-      - name: Run tests
+      - name: "[4] Run API container"
+        run: |
+          echo "Starting API container..."
+          docker run --name contactkeeper \
+            --network contactkeeper-network \
+            -p 5000:5000 \
+            -e "ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=ContactKeeper;User Id=sa;Password=${{ secrets.SQL_SERVER_PASSWORD }};TrustServerCertificate=True;" \
+            -d ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-api:latest
+
+          if [ $? -ne 0 ]; then
+            echo "Failed to start API container"
+            docker logs contactkeeper
+            exit 1
+          fi
+
+          echo "Waiting for API to initialize..."
+          sleep 10
+
+          if ! docker ps | grep -q contactkeeper; then
+            echo "API container is not running"
+            docker logs contactkeeper
+            exit 1
+          fi
+
+      - name: "[5] Run tests"
         env:
           DOTNET_CLI_TELEMETRY_OPTOUT: 1
           DOTNET_NOLOGO: true
           ASPNETCORE_ENVIRONMENT: ${{ secrets.ENV_DEVOPS }}                
         run: dotnet test ./ContactKeeper.Test/ContactKeeper.Test.csproj --configuration Release --verbosity normal
    
-      - name: Run Docker container
-        run: |          
-           docker run --name contactkeeper \
-             --network contactkeeper-network \
-             -p 5000:5000 \
-             -e "Server=sqlserver,1433;Database=ContactKeeper;User Id=sa;Password=${{ secrets.SQL_SERVER_PASSWORD }};TrustServerCertificate=True;" \
-             -d ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-api:latest
-   
-           if  $? -ne 0; then
-             echo "Failed to start application container"
-             docker logs contactkeeper
-             exit 1
-           fi
-   
-           # Wait for the application to initialize
-           sleep 10
-           # Check if the container is running
-           if ! docker ps | grep -q contactkeeper; then
-             echo "Application container is not running"
-             docker logs contactkeeper
-             exit 1
-           fi
-   
+      - name: "[6] Health check"
+        run: |        
+         
            # Test database connectivity (assumes a /health endpoint; adjust as needed)
            docker exec contactkeeper /bin/sh -c "apt-get update && apt-get install -y curl && curl -f http://localhost:5000/Health/HealthDataBase || exit 1" || { echo "Health check failed"; docker logs contactkeeper; exit 1; }
            echo "Application container started successfully"

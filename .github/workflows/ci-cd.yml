@@ -26,128 +26,92 @@ jobs:
         with:             
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+     
           
-
       - name: "[4] Create Docker network"
-        run: docker network create contactkeeper-network
-  
+        run: |
+          docker network create contactkeeper-network || true
+        
       - name: "[5] Set up SQL Server"
         run: |
-            docker run --name sqlserver \
-              --network contactkeeper-network \
-              -e "ACCEPT_EULA=Y" \
-              -e "MSSQL_SA_PASSWORD=${{ secrets.SQL_SERVER_PASSWORD }}" \
-              -p 1433:1433 \
-              -d mcr.microsoft.com/mssql/server:2022-latest
+          echo "Starting SQL Server container..."
+          docker run --name sqlserver \
+            --network contactkeeper-network \
+            -e "ACCEPT_EULA=Y" \
+            -e "MSSQL_SA_PASSWORD=${{ secrets.SQL_SERVER_PASSWORD }}" \
+            -p 1433:1433 \
+            --memory="2g" \
+            --cpus="1" \
+            -d mcr.microsoft.com/mssql/server:2022-latest
+          if [ $? -ne 0 ]; then
+            echo "Failed to start SQL Server container"
+            docker logs sqlserver
+            exit 1
+          fi
+        
+          echo "Installing mssql-tools..."
+          docker exec sqlserver bash -c "apt-get update && \
+            apt-get remove -y libodbc2 libodbcinst2 unixodbc-common || true && \
+            apt-get install -y gnupg curl apt-transport-https && \
+            curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
+            curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
+            apt-get update && \
+            ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev && \
+            ln -s /opt/mssql-tools/bin/sqlcmd /usr/bin/sqlcmd" || { echo "Package installation failed"; docker logs sqlserver; exit 1; }
+        
+          echo "Waiting for SQL Server to initialize..."
+          for i in {1..60}; do
+            if docker exec sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "SELECT 1" > /dev/null 2>&1; then
+              echo "SQL Server is ready!"
+              break
+            fi
+            echo "Waiting for SQL Server... ($i/60)"
+            sleep 2
+          done
+          if [ $i -eq 60 ]; then
+            echo "SQL Server failed to start within timeout"
+            docker logs sqlserver
+            exit 1
+          fi
+        
+          echo "Creating database..."
+          docker exec -i sqlserver sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "CREATE DATABASE ContactKeeper;" || { echo "Failed to create database"; docker logs sqlserver; exit 1; }
 
-              sleep 60 
-               docker exec -u root sqlserver bash -c "apt-get update && \
-                 apt-get remove -y libodbc2 libodbcinst2 unixodbc-common && \
-                 apt-get install -y gnupg curl apt-transport-https && \
-                  curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
-                  curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
-                  apt-get update && \
-                  ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev && \
-                  ln -s /opt/mssql-tools/bin/sqlcmd /usr/bin/sqlcmd"
+      # - name: "[4] Create Docker network"
+      #   run: docker network create contactkeeper-network
   
-            # Wait for SQL Server to be ready
-            for i in {1..30}; do
-              if docker exec sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "SELECT 1" > /dev/null 2>&1; then
-                echo "SQL Server is ready!";
-                break;
-              fi
-              echo "Waiting for SQL Server...";
-              sleep 2;
-            done
-  
-            # Create the database
-            docker exec -i sqlserver sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "USE master; CREATE DATABASE ContactKeeper;"
-  
-          
-      # - name: "[4] Set up SQL Server"
+      # - name: "[5] Set up SQL Server"
       #   run: |
-      #          docker pull mcr.microsoft.com/mssql/server:2022-latest 
-      #          docker run -d --name sqlserver \
-      #           -e "ACCEPT_EULA=Y" \
-      #           -e "SA_PASSWORD=${{ secrets.SQL_SERVER_PASSWORD }}" \
-      #           -p 1433:1433 mcr.microsoft.com/mssql/server:2022-latest
-      #          sleep 15 # Wait for SQL Server to start
+      #       docker run --name sqlserver \
+      #         --network contactkeeper-network \
+      #         -e "ACCEPT_EULA=Y" \
+      #         -e "MSSQL_SA_PASSWORD=${{ secrets.SQL_SERVER_PASSWORD }}" \
+      #         -p 1433:1433 \
+      #         -d mcr.microsoft.com/mssql/server:2022-latest
+
+      #         sleep 60 
       #          docker exec -u root sqlserver bash -c "apt-get update && \
-      #             apt-get install -y gnupg curl apt-transport-https && \
+      #            apt-get remove -y libodbc2 libodbcinst2 unixodbc-common && \
+      #            apt-get install -y gnupg curl apt-transport-https && \
       #             curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
       #             curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
       #             apt-get update && \
       #             ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev && \
       #             ln -s /opt/mssql-tools/bin/sqlcmd /usr/bin/sqlcmd"
-      #           docker exec -i sqlserver sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "CREATE DATABASE ContactKeeper;"
-
-      # - name: "[4] Set up SQL Server"
-      #   run: |
-      #     docker run \
-      #       --name sqlserver \
-      #       -e "ACCEPT_EULA=Y" \
-      #       -e "MSSQL_SA_PASSWORD=${{ secrets.SQL_SERVER_PASSWORD }}" \
-      #       -e "SA_PASSWORD=${{ secrets.SQL_SERVER_PASSWORD }}" \
-      #       -p 1433:1433 \
-      #       -d mcr.microsoft.com/mssql/server:2022-latest
-
-            
-      # - name: "[5.2] Install sqlcmd and initialize database"
-      #   run: |
-      #     sleep 60
-      #     docker exec -u root sqlserver bash -c "apt-get update && \
-      #     apt-get remove -y libodbc2 libodbcinst2 unixodbc-common && \
-      #     apt-get install -y gnupg curl apt-transport-https && \
-      #     curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
-      #     curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
-      #     apt-get update && \
-      #     ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev && \
-      #     ln -s /opt/mssql-tools/bin/sqlcmd /usr/bin/sqlcmd"
-          
-      #     # docker exec sqlserver /opt/mssql-tools/bin/sqlcmd \
-      #     docker exec -i sqlserver sqlcmd \
-      #     -S localhost \
-      #     -U sa \
-      #     -P ${{ secrets.SQL_SERVER_PASSWORD }} \
-      #     -Q "USE master; CREATE DATABASE ContactKeeper;"
-            
-      # - name: "[5.1] Wait for SQL Server to be ready"
-      #   run: |
-      #     for i in {1..30}; do
-      #       if docker exec sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} 
-      #       -Q "USE ContactKeeper; SELECT 1;" > /dev/null 2>&1; then
-      #         echo "SQL Server is ready!";
-      #         break;
-      #       fi;
-      #       echo "Waiting for SQL Server...";
-      #       sleep 2;
-      #     done
-      #     if [ $? -ne 0 ]; then
-      #       echo "SQL Server did not start in time!";
-      #       exit 1;
-      #     fi
-        
-      # - name: "[6] Run EF Core migrations"
-      #   run: |
-      #     docker run --rm --network host \
-      #       -e "ConnectionStrings__DefaultConnection=Server=localhost,1433;Database=ContactKeeper;User Id=sa;Password=${{ secrets.SQL_SERVER_PASSWORD }};" \
-      #       -v ${{ github.workspace }}:/src \
-      #       -w /src \
-      #       mcr.microsoft.com/dotnet/sdk:8.0 \
-      #       bash -c "
-      #         dotnet tool install --global dotnet-ef && \
-      #         export PATH=\"$PATH:/root/.dotnet/tools\" && \
-      #         dotnet ef database update --project ContactKeeper/ContactKeeper.csproj"
-
-      # - name: "[6] Run EF Core migrations"
-      #   run: |
-      #     docker run --rm --network host \
-      #       -e "ConnectionStrings__DefaultConnection=Server=localhost,1433;Database=ContactKeeper;User Id=sa;Password=${{ secrets.SQL_SERVER_PASSWORD }};" \
-      #       -v ${{ github.workspace }}:/src \
-      #       -w /src \
-      #       mcr.microsoft.com/dotnet/sdk:8.0 \
-      #       dotnet ef database update --project ContactKeeper/ContactKeeper.csproj
-                
+  
+      #       # Wait for SQL Server to be ready
+      #       for i in {1..30}; do
+      #         if docker exec sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "SELECT 1" > /dev/null 2>&1; then
+      #           echo "SQL Server is ready!";
+      #           break;
+      #         fi
+      #         echo "Waiting for SQL Server...";
+      #         sleep 2;
+      #       done
+  
+      #       # Create the database
+      #       docker exec -i sqlserver sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "USE master; CREATE DATABASE ContactKeeper;"
+  
       
       - name: Build and push Docker image
         if: success()
@@ -176,3 +140,8 @@ jobs:
             -p 5000:5000 \
             -e "ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=ContactKeeper;User Id=sa;Password=${{ secrets.SQL_SERVER_PASSWORD }};TrustServerCertificate=True;" \
             -d ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-api:latest
+
+
+
+
+            docker run --name sqlserver -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=1q2w3e4r@#$" -p 1433:1433 -d mcr.microsoft.com/mssql/server

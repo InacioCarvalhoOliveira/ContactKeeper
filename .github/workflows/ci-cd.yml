@@ -83,7 +83,7 @@ jobs:
   
   Build-Dockerfile-setup:
     runs-on: ubuntu-latest
-    needs: [Environment-setup, SqlServer-setup]
+    needs: [Environment-setup]
     steps:
       - name: Build and push Docker image
         if: success()

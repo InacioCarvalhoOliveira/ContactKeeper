@@ -1,12 +1,37 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\GitHub\\Dotnet\\APIS\\ContactKeeper\\",
-  "Documents": [],
+  "WorkspaceRootPath": "D:\\Programas\\ContactKeeper\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{0F519F01-C3F9-4571-98BE-E92D5CE831AB}|ContactKeeper.csproj|d:\\programas\\contactkeeper\\contactkeeper.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{0F519F01-C3F9-4571-98BE-E92D5CE831AB}|ContactKeeper.csproj|solutionrelative:contactkeeper.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 1,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ContactKeeper",
+              "DocumentMoniker": "D:\\Programas\\ContactKeeper\\ContactKeeper.csproj",
+              "RelativeDocumentMoniker": "ContactKeeper.csproj",
+              "ToolTip": "D:\\Programas\\ContactKeeper\\ContactKeeper.csproj",
+              "RelativeToolTip": "ContactKeeper.csproj",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAArAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-04-10T14:00:55.248Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }

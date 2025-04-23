@@ -49,7 +49,7 @@ jobs:
             fi
         
             echo "Installing mssql-tools..."
-            docker exec sqlserver bash -c "apt-get update && \
+            docker exec --user root sqlserver bash -c "apt-get update && \
               apt-get remove -y libodbc2 libodbcinst2 unixodbc-common || true && \
               apt-get install -y gnupg curl apt-transport-https && \
               curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \

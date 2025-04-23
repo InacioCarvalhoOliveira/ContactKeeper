@@ -117,7 +117,7 @@ jobs:
               docker logs contactkeeper
               exit 1
             fi
-            
+
             # Test database connectivity (assumes a /health endpoint; adjust as needed)
-            docker exec contactkeeper /bin/sh -c "apt-get update && apt-get install -y curl && curl -f http://localhost:5000/health || exit 1" || { echo "Health check failed"; docker logs contactkeeper; exit 1; }
+            docker exec contactkeeper /bin/sh -c "apt-get update && apt-get install -y curl && curl -f https://localhost:5000/Health/HealthDataBase || exit 1" || { echo "Health check failed"; docker logs contactkeeper; exit 1; }
             echo "Application container started successfully"

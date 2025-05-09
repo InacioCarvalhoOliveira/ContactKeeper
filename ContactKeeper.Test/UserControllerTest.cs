@@ -96,6 +96,7 @@ public class UserControllerTest
         var results = okResult.Value as List<User>;
         Assert.That(results, Is.Not.Null); //check if users is not null
         Assert.That(results, Is.InstanceOf<List<User>>()); //check if users is instance of List<User>
+        
     }
     #endregion
     
@@ -106,7 +107,7 @@ public class UserControllerTest
         //Arrange
         var user = new User
         {
-            Id = 1008,
+            Id = 1,
             Username = "inacio",
             Email = "inacio.carvalho@gmail.com",
             PhoneNumber = new PhoneNumber
@@ -118,10 +119,19 @@ public class UserControllerTest
         };        
         _mockRepository.Setup(repo => repo.GetUserById(user.Id)).ReturnsAsync(user);
         var result = await _controller.GetUserById(user.Id);
-        //Assert.That(result, Is.EqualTo(user = result.Value));
-        Assert.That(result, Is.Not.Null); // Check if result is not null
-        Assert.That(result.Value, Is.InstanceOf<User>()); // Check if result.Value is of type User
-        Assert.That(result, Is.Not.Null); //check if result is not null
+        var okResult = result.Result as OkObjectResult;
+        Assert.That(okResult, Is.Not.Null); // Check if okResult is not null
+        var returnedUser = okResult.Value as User;
+        Assert.That(returnedUser, Is.EqualTo(user)); // Verify that the returned user matches the expected user
+        Assert.That(returnedUser, Is.Not.Null); // Check if returned user is not null
+        Assert.That(okResult.Value, Is.InstanceOf<User>()); // Ensure the returned value is of type User
+        Assert.That(okResult.StatusCode, Is.EqualTo(200)); // Check if status code is 200
+        Assert.That(returnedUser.Id, Is.EqualTo(user.Id)); // Verify user ID
+        Assert.That(returnedUser.Username, Is.EqualTo(user.Username)); // Verify username
+        Assert.That(returnedUser.Email, Is.EqualTo(user.Email)); // Verify email
+        Assert.That(returnedUser.PhoneNumber.DDI, Is.EqualTo(user.PhoneNumber.DDI)); // Verify phone number DDI
+        Assert.That(returnedUser.PhoneNumber.DDD, Is.EqualTo(user.PhoneNumber.DDD)); // Verify phone number DDD
+        Assert.That(returnedUser.PhoneNumber.LocalNumber, Is.EqualTo(user.PhoneNumber.LocalNumber)); // Verify phone number local number
     }
     #endregion
 }

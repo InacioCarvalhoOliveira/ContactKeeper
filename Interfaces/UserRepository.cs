@@ -30,51 +30,58 @@ namespace ContactKeeper.Interfaces
         {
             var user = await _context.Users
              .AsNoTracking()
-             .Include(x => x.PhoneNumber)
+             //.Include(x => x.PhoneNumber)
              .FirstOrDefaultAsync(x => x.Id == id);             
              return user;
         }
-        public async Task<IList<User>> GetInfoUserByDdd(int ddd)
-        {
-            const string cacheKey = "UsersByDdd";
-            if (!_cache.TryGetValue(cacheKey, out IList<User> users))
-            {
-                users = await _context.Users
-                .AsNoTracking()
-                .Include(x => x.PhoneNumber)
-                .Where(x => x.PhoneNumber.DDD == ddd)
-                .ToListAsync();
+        // public async Task<IList<User>> GetInfoUserByDdd(int ddd)
+        // {
+        //     const string cacheKey = "UsersByDdd";
+        //     if (!_cache.TryGetValue(cacheKey, out IList<User> users))
+        //     {
+        //         users = await _context.Users
+        //         .AsNoTracking()
+        //         .Include(x => x.PhoneNumber)
+        //         .Where(x => x.PhoneNumber.DDD == ddd)
+        //         .ToListAsync();
                 
-                _cache.Set(cacheKey, users, new MemoryCacheEntryOptions{
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-                });
-                Console.WriteLine("dados do banco");
-            }
-            else
-            {
-                users = _cache.Get(cacheKey) as IList<User>;
-                Console.WriteLine("dados do cache");
+        //         _cache.Set(cacheKey, users, new MemoryCacheEntryOptions{
+        //             AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(10)
+        //         });
+        //         Console.WriteLine("dados do banco");
+        //     }
+        //     else
+        //     {
+        //         users = _cache.Get(cacheKey) as IList<User>;
+        //         Console.WriteLine("dados do cache");
 
-            }
-            return users;
-        }
-       public async Task<User> AddUser(User user)
-    {
-        string path = "d:/GitHub/Dotnet/APIS/ContactKeeper/util/ddd/dddsBrasileiros.json";
-        var jsonString = await File.ReadAllTextAsync(path);
-        var dddsData = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, List<string>>>>(jsonString);
-
-        if (dddsData != null && dddsData["dddsPorEstado"].Values.Any(list => list.Contains(user.PhoneNumber.DDD.ToString())))
+        //     }
+        //     return users;
+        // }
+        public async Task<User> AddUser(User user)
         {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            // string path = "d:/GitHub/Dotnet/APIS/ContactKeeper/util/ddd/dddsBrasileiros.json";
+            // var jsonString = await File.ReadAllTextAsync(path);
+            // var dddsData = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, List<string>>>>(jsonString);
+
+            //if (dddsData != null && dddsData["dddsPorEstado"].Values.Any(list => list.Contains(user.PhoneNumber.DDD.ToString())))
+            //{
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+                return user;
+            //}
+            //else
+            //{
+                //throw new ArgumentException("DDD inválido.");
+            //}
+        }
+        public async Task<User> Authenticate(string userName, string password)
+        {
+            var user = await _context.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Username == userName && x.Password == password);
             return user;
         }
-        else
-        {
-            throw new ArgumentException("DDD inválido.");
-        }
-    }
         public async Task<User> DeleteUser(int id)
         {
            var userToDelete = await GetUserById(id);
@@ -94,12 +101,12 @@ namespace ContactKeeper.Interfaces
             {
                 userToUpdate.Username = user.Username;
                 userToUpdate.Email = user.Email;
-                if(user.PhoneNumber != null)
-                {
-                    userToUpdate.PhoneNumber.DDI = user.PhoneNumber.DDI;
-                    userToUpdate.PhoneNumber.DDD = user.PhoneNumber.DDD;
-                    userToUpdate.PhoneNumber.LocalNumber = user.PhoneNumber.LocalNumber;
-                }
+                // if(user.PhoneNumber != null)
+                // {
+                //     userToUpdate.PhoneNumber.DDI = user.PhoneNumber.DDI;
+                //     userToUpdate.PhoneNumber.DDD = user.PhoneNumber.DDD;
+                //     userToUpdate.PhoneNumber.LocalNumber = user.PhoneNumber.LocalNumber;
+                // }
                 _context.Users.Update(userToUpdate);
                 await _context.SaveChangesAsync();
                 return userToUpdate;

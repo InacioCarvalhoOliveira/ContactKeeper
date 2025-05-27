@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ContactKeeper.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250421232007_initialCreate")]
+    [Migration("20250527021919_initialCreate")]
     partial class initialCreate
     {
         /// <inheritdoc />
@@ -24,32 +24,6 @@ namespace ContactKeeper.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ContactKeeper.Models.PhoneNumber", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("DDD")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DDI")
-                        .IsRequired()
-                        .HasMaxLength(3)
-                        .HasColumnType("nvarchar(3)");
-
-                    b.Property<string>("LocalNumber")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PhoneNumber");
-                });
-
             modelBuilder.Entity("ContactKeeper.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -61,8 +35,13 @@ namespace ContactKeeper.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PhoneNumberId")
-                        .HasColumnType("int");
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -71,20 +50,33 @@ namespace ContactKeeper.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PhoneNumberId");
-
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("ContactKeeper.Models.User", b =>
+            modelBuilder.Entity("ContactKeeper.Models.UserContact", b =>
                 {
-                    b.HasOne("ContactKeeper.Models.PhoneNumber", "PhoneNumber")
-                        .WithMany()
-                        .HasForeignKey("PhoneNumberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Navigation("PhoneNumber");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DDD")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DDI")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserContact");
                 });
 #pragma warning restore 612, 618
         }

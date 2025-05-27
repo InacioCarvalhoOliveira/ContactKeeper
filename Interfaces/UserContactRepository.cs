@@ -29,6 +29,14 @@ namespace ContactKeeper.Ineterfaces
 
             return userContact;
         }
+        public async Task<IEnumerable<UserContact>> GetUserContact()
+        {
+            var userContacts = await _context.UserContacts
+                .AsNoTracking()
+                .ToListAsync();
+
+            return userContacts;
+        }
 
         public async Task<UserContact> DeleteUserContact(Guid id)
         {
@@ -38,15 +46,6 @@ namespace ContactKeeper.Ineterfaces
         public async Task<UserContact> GetUserContactById(int id)
         {
             throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<UserContact>> GetUserContact()
-        {
-            var userContacts = await _context.UserContacts
-                .AsNoTracking()
-                .ToListAsync();
-
-            return userContacts;
         }
 
         public async Task<UserContact> UpdateUserContact(UserContact userContact)

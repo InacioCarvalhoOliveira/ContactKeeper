@@ -14,11 +14,11 @@ Este projeto se baseia na ideia de Gerenciamento de contatos Telefônicos. Com e
 - Framework: ASP.NET CORE (Dapper/EF)
 - Banco de Dados: SQL Server(em container Docker)
 - Entity Framework Migrations,
-- implementação da documentação swagger, DataAnnotations, UnitOfWork, Singleton, Hot e Cold Cache.
+- implementação da documentação swagger, DataAnnotations, UnitOfWork, Singleton, Hot e Cold Cache,
 - Azure functions,
-- observabilidade com Grafana
+- Observabilidade com Grafana,
 - Microsserviços,
-- resiliência com Circuit Breaker Half-Open
+- resiliência com Circuit Breaker Half-Open.
 
 ## ⚒️ Configuração
 

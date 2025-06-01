@@ -11,21 +11,18 @@ namespace ContactKeeper.Interfaces
     {
         private readonly DataContext _context;
         private readonly IuserRepository _userRepository;
-        private readonly IUserContactRepository _userContactRepository;
         private IDbContextTransaction _transaction;
 
-       public  UnitOfWork(IOptions<DatabaseSettings> 
+       public UnitOfWork(IOptions<DatabaseSettings> 
         databaseSettings,
         DataContext context,
-        IuserRepository userRepository,
-        IUserContactRepository userContactRepository) : base(databaseSettings)
+        IuserRepository userRepository) : base(databaseSettings)
         {
             _context = context;
             _userRepository = userRepository;
-            _userContactRepository = userContactRepository;
         }
 
-        public new void BeginTransaction()
+        public void BeginTransaction()
         {
             _transaction = _context.Database.BeginTransaction();
         }
@@ -44,16 +41,14 @@ namespace ContactKeeper.Interfaces
             }
         }
 
-        public new void Rollback()
+        public void Rollback()
         {
             _transaction?.Rollback();
         }
 
         public IuserRepository UserRepository => _userRepository;
 
-        public IUserContactRepository UserContactRepository => _userContactRepository;
-
-        public new void Dispose()
+        public void Dispose()
         {
             _transaction?.Dispose();
             _context?.Dispose();

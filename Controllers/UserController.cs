@@ -2,8 +2,6 @@ using ContactKeeper.Contracts;
 using ContactKeeper.Data;
 using ContactKeeper.Interfaces;
 using ContactKeeper.Models;
-using ContactKeeper.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -11,7 +9,7 @@ namespace ContactKeeper.Controllers
 {
     [ApiController]
     [Route("User")]
-    public class UserController : ControllerBase            
+    public class UserController : ControllerBase
     {
         private readonly DataContext _context;
         private readonly IunitOfWork _iunitOfWork;
@@ -32,7 +30,6 @@ namespace ContactKeeper.Controllers
 
         #region [getallUsers]
         [HttpGet]
-        [Authorize(Roles = "admin")]
         [SwaggerOperation(
             Summary = "Get all users",
             Description = "Get all users from the database"
@@ -76,81 +73,47 @@ namespace ContactKeeper.Controllers
         #endregion
 
         #region [GetUsersByDdd]
-        // [Route("ddd/{ddd:int}")]
-        // [SwaggerOperation(
-        //     Summary = "Get users by DDD",
-        //     Description = "Get users from the database by their DDD"
-        // )]
-        // [HttpGet]
-        // public async Task<IActionResult> GetUsersByDdd(int ddd)
-        // {
-        //     var users = await _userRepository.GetInfoUserByDdd(ddd);
-        //     if (users == null || users.Count == 0)
-        //     {
-        //     return NotFound(new { message = "No users found with the specified DDD." });
-        //     }
-        //     return Ok(users);
-        // }            
+        [Route("ddd/{ddd:int}")]
+        [SwaggerOperation(
+            Summary = "Get users by DDD",
+            Description = "Get users from the database by their DDD"
+        )]
+        [HttpGet]
+        public async Task<IActionResult> GetUsersByDdd(int ddd)
+        {
+            var users = await _userRepository.GetInfoUserByDdd(ddd);
+            if (users == null || users.Count == 0)
+            {
+            return NotFound(new { message = "No users found with the specified DDD." });
+            }
+            return Ok(users);
+        }            
         #endregion    
 
         #region [addUser]
         [HttpPost]
-        [AllowAnonymous]
-        
         [SwaggerOperation(
             Summary = "Add a new user",
             Description = "Add a new user to the database"
         )]
-        public async Task<ActionResult<User>> AddUser(
-            [FromBody] User _user
-            )
-        {           
-            //var userRole = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
-            // Verifica se o modelo é válido
-        
+        public async Task<ActionResult<User>> AddUser([FromBody] User user)
+        {
             if (!ModelState.IsValid)
             {
             return BadRequest(ModelState); // Retorna erros de validação padrão
             }                      
 
-            //user.Role = "admin"; // Define o papel padrão como "admin"
-           
             _iunitOfWork.BeginTransaction();
-            await _iunitOfWork.UserRepository.AddUser(_user);
+            await _iunitOfWork.UserRepository.AddUser(user);
             await _iunitOfWork.CommitAsync();
 
-            return CreatedAtAction(nameof(GetUsers), new { id = _user.Id }, _user);
-        }
-        #endregion
-
-        #region [Login]
-        [HttpPost]
-        [Route("login")]
-        [AllowAnonymous]
-        public async Task<ActionResult<dynamic>> Authenticate(
-            [FromBody] User model,
-            [FromServices] DataContext context
-        )
-        {
-            var user = await _iunitOfWork.UserRepository.Authenticate(model.Username, model.Password);
-            if (user == null)
-                return NotFound(new { message = "User or password invalid" });
-
-            var token = TokenService.GenerateToken(user);
-            user.Password = "";
-
-            return new
-            {
-                user = user,
-                token = token
-            };
+            return CreatedAtAction(nameof(GetUsers), new { id = user.Id }, user);
         }
         #endregion
 
         #region [UpdateUser] 
         [HttpPut]
         [Route("{id:int}")]
-        [Authorize(Roles = "adm")]
         [SwaggerOperation(
             Summary = "Update a user",
             Description = "Update an existing user in the database"
@@ -184,7 +147,6 @@ namespace ContactKeeper.Controllers
         #region [DeleteUser]
         [HttpDelete]
         [Route("{id:int}")]
-        [Authorize(Roles = "testes")]
         [SwaggerOperation(
         Summary = "Delete a user",
         Description = "Delete a user from the database by their ID"

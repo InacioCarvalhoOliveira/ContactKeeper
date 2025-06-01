@@ -6,11 +6,9 @@ namespace ContactKeeper.Contracts
     {
         Task<IEnumerable<User>> GetUsers();
         Task<User> GetUserById(int id);      
-        //Task<IList<User>> GetInfoUserByDdd(int ddd);
+        Task<IList<User>> GetInfoUserByDdd(int ddd);
         Task<User> AddUser(User user);
-        Task<User> Authenticate(string userName, string password);
         Task<User> UpdateUser(User user);
         Task<User> DeleteUser(int id);
-        
     }
 }

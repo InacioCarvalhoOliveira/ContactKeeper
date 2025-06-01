@@ -29,7 +29,7 @@ Pré-requisito: Dotnet sdk8.0
 
 ## 📍End-Points API:
 
-![1738016751476](image/README/1738016751476.png)
+![1738016751476](image/README/api.png)
 
 ## 👩‍💻 Autor
 

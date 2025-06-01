@@ -15,6 +15,10 @@ Este projeto se baseia na ideia de Gerenciamento de contatos Telefônicos. Com e
 - Banco de Dados: SQL Server(em container Docker)
 - Entity Framework Migrations,
 - implementação da documentação swagger, DataAnnotations, UnitOfWork, Singleton, Hot e Cold Cache.
+- Azure functions,
+- observabilidade com Grafana
+- Microsserviços,
+- resiliência com Circuit Breaker Half-Open
 
 ## ⚒️ Configuração
 

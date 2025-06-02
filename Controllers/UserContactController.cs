@@ -43,7 +43,7 @@ namespace ContactKeeper.Controllers
                 return BadRequest(ModelState);
 
             _iunitOfWork.BeginTransaction();
-            await _iunitOfWork.UserContactRepository.AddUserContact(userContact);
+            await _userContactRepository.AddUserContact(userContact);
             await _iunitOfWork.CommitAsync();
 
             return Ok(userContact);
@@ -62,7 +62,7 @@ namespace ContactKeeper.Controllers
             
             try
             {
-                var users = await _iunitOfWork.UserContactRepository.GetUserContact();
+                var users = await _userContactRepository.GetUserContact();
                 return Ok(users);
             }
             catch(Exception ex)    
@@ -85,7 +85,7 @@ namespace ContactKeeper.Controllers
         {
             try
             {
-                var user = await _iunitOfWork.UserContactRepository.GetUserContactById(userId);
+                var user = await _userContactRepository.GetUserContactById(userId);
                 if(user == null)
                     return NotFound(new{Message= "ID not found!"});
 

@@ -5,6 +5,7 @@ using ContactKeeper.Data;
 using ContactKeeper.Interfaces;
 using ContactKeeper.Microservices;
 using ContactKeeper.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Polly.CircuitBreaker;
 using Prometheus;
@@ -107,7 +108,7 @@ namespace ContactKeeper.Controllers
             Description = "Add a new user to the database"
         )]
         public async Task<ActionResult<User>> AddUser(
-            [FromBody] User _user
+            [FromBody] User user
             )
         {
             if (!ModelState.IsValid)
@@ -116,10 +117,10 @@ namespace ContactKeeper.Controllers
             }
 
             _iunitOfWork.BeginTransaction();
-            await _iunitOfWork.UserRepository.AddUser(user);
+            await _userRepository.AddUser(user);
             await _iunitOfWork.CommitAsync();
 
-            return CreatedAtAction(nameof(GetUsers), new { id = _user.Id }, _user);
+            return CreatedAtAction(nameof(GetUsers), new { id = user.Id }, user);
         }
         #endregion
 
@@ -167,7 +168,7 @@ namespace ContactKeeper.Controllers
 
                     using (AuthLatencyHistogram.NewTimer())
                     {
-                        var user = await _iunitOfWork.UserRepository.Authenticate(model.Username, model.Role, model.Password);
+                        var user = await _userRepository.Authenticate(model.Username, model.Role, model.Password);
                         if (user == null)
                         {
                             LoginFailureCounter.Inc(); // Increment failure on invalid login

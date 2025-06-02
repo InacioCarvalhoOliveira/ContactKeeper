@@ -7,9 +7,8 @@ using Swashbuckle.AspNetCore.Annotations;
 using Microsoft.OpenApi.Any;
 using ContactKeeper.Models;
 using ContactKeeper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+//using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using ContactKeeper.Ineterfaces;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +16,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using ContactKeeper.Microservices;
 using Prometheus;
+using ContactKeeper.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,15 +25,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 // Add CORS policy
 builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", policy =>
-    {
-        policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
-});
-builder.Services.AddSwaggerGen(c =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
@@ -65,16 +56,7 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
         options.JsonSerializerOptions.PropertyNamingPolicy = null;
     });
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll",
-        builder =>
-        {
-            builder.AllowAnyOrigin()
-                   .AllowAnyMethod()
-                   .AllowAnyHeader();
-        });
-});
+
 
 builder.Services.AddScoped<IuserRepository, UserRepository>();
 builder.Services.AddScoped<IUserContactRepository, UserContactRepository>();
@@ -130,18 +112,12 @@ app.UseSwaggerUI(c =>
 app.UseMetricServer();
 app.UseHttpMetrics();
 
-app.UseMetricServer();
-app.UseHttpMetrics();
-
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseCors("AllowAll");
-
 app.UseSwagger();
-app.UseReDoc();
 
 app.MapControllers();
 app.UseCors("AllowAll");

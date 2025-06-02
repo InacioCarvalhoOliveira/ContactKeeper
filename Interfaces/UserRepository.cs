@@ -39,7 +39,7 @@ namespace ContactKeeper.Interfaces
 
         public async Task<User> AddUser(User user)
         {
-          try
+            try
             {
                 if (string.IsNullOrWhiteSpace(user.Role))
                 {
@@ -54,7 +54,7 @@ namespace ContactKeeper.Interfaces
                     .AsNoTracking()
                     .FirstOrDefaultAsync(x => x.Id == user.Id);
 
-                return newUser ?? user; 
+                return newUser ?? user;
             }
             catch (Exception ex)
             {
@@ -84,63 +84,10 @@ namespace ContactKeeper.Interfaces
                 Role = user.Role
             };
 
-        }
+        }      
+    
 
-
-        public async Task<User> AddUser(User user)
-        {
-          try
-            {
-                if (string.IsNullOrWhiteSpace(user.Role))
-                {
-                    user.Role = "user";
-                }
-
-                _context.Users.Add(user);
-
-                await _context.SaveChangesAsync();
-
-                var newUser = await _context.Users
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.Id == user.Id);
-
-                return newUser ?? user; 
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error adding user: {ex.Message}");
-                return null;
-            }
-
-
-        }
-        public async Task<UserDto> Authenticate(string username, string role, string password)
-        {
-
-            var user = await _context.Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Username == username
-                && x.Role == role
-                && x.Password == password);
-            if (user == null)
-            {
-                return null;
-            }
-            return new UserDto
-            {
-                Id = user.Id,
-                Username = user.Username,
-                Password = user.Password,
-                Role = user.Role
-            };
-
-        }
-        else
-        {
-            throw new ArgumentException("DDD inválido.");
-        }
-    }
-        public async Task<User> DeleteUser(int id)
+    public async Task<User> DeleteUser(int id)
         {
             var userToDelete = await GetUserById(id);
             if (userToDelete != null)
@@ -151,6 +98,7 @@ namespace ContactKeeper.Interfaces
             }
             return userToDelete;
         }
+
         public async Task<User> UpdateUser(User user)
         {
 
@@ -158,14 +106,14 @@ namespace ContactKeeper.Interfaces
             if (userToUpdate != null)
             {
                 userToUpdate.Username = user.Username;
-                userToUpdate.Email = user.Email; 
+                userToUpdate.Email = user.Email;
                 userToUpdate.Password = user.Password;
-                userToUpdate.Role = user.Role;            
+                userToUpdate.Role = user.Role;
                 _context.Users.Update(userToUpdate);
                 await _context.SaveChangesAsync();
                 return userToUpdate;
             }
             return null;
-        }        
+        }
     }
 }

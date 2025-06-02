@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.DataProtection.KeyManagement.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace ContactKeeper.Ineterfaces
+namespace ContactKeeper.Interfaces
 {
     public class UserContactRepository : IUserContactRepository
     {

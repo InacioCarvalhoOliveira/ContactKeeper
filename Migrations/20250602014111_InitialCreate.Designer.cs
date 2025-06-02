@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ContactKeeper.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250601003725_AddUserIdusertoUsertable")]
-    partial class AddUserIdusertoUsertable
+    [Migration("20250602014111_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,9 +49,6 @@ namespace ContactKeeper.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<int>("userId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("User");
@@ -83,7 +80,25 @@ namespace ContactKeeper.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("UserContact");
+                });
+
+            modelBuilder.Entity("ContactKeeper.Models.UserContact", b =>
+                {
+                    b.HasOne("ContactKeeper.Models.User", "User")
+                        .WithMany("UserContacts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ContactKeeper.Models.User", b =>
+                {
+                    b.Navigation("UserContacts");
                 });
 #pragma warning restore 612, 618
         }

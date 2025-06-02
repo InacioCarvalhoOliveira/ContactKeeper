@@ -27,7 +27,7 @@ Este projeto se baseia na ideia de Gerenciamento de contatos Telefônicos. Com e
 Pré-requisito: Dotnet sdk8.0
 
 1. Clone o repositório
-2. Instale as dependências documentadas ![aqui](util/notas.md)
+2. Instale as dependências documentadas [aqui](util/notas.md)
 
 
 ## 📍End-Points API:

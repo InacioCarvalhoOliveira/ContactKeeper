@@ -11,22 +11,28 @@ Este projeto se baseia na ideia de Gerenciamento de contatos Telefônicos. Com e
 
 ## 🥷 Tecnologias
 
-- Linguagem: C#(Sdk8.0)
-- Framework: ASP.NET CORE (Dapper/EF)
-- Banco de Dados: SQL Server(em container Docker)
-- Entity Framework Migrations,
-- implementação da documentação swagger, DataAnnotations, UnitOfWork, Singleton, Hot e Cold Cache.
+- Linguagem: C#(Sdk8.0);
+- Framework: ASP.NET CORE (Dapper/EF);
+- Banco de Dados: SQL Server(em container Docker);
+- Entity Framework Migrations;
+- implementação da documentação swagger, DataAnnotations, UnitOfWork, Singleton, Hot e Cold Cache;
+- Resiliência com Circuit-breaker Half-Open;
+- Observabilidade com Prometheus em Grafana;
+- Microsserviços externos;
+- Functions on Azure;
+- Autenticação com JWT. 
 
 ## ⚒️ Configuração
 
 Pré-requisito: Dotnet sdk8.0
 
 1. Clone o repositório
-2. Instale as dependências documentadas em **/notas.md**
+2. Instale as dependências documentadas em  ![aqui](util/notas.md)
+
 
 ## 📍End-Points API:
 
-![1738016751476](image/README/1738016751476.png)
+![1738016751476](image/README/api.png)
 
 ## 👩‍💻 Autor
 

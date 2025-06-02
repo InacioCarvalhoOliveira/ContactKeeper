@@ -9,6 +9,7 @@ namespace ContactKeeper.Contracts
         Task<UserContact> AddUserContact(UserContact userContact);
         Task<UserContact> UpdateUserContact(UserContact userContact);
         Task<UserContact> DeleteUserContact(Guid id);
+        Task<IList<UserContact>> GetInfoUserByDdd(int ddd);    
 
     }
 }

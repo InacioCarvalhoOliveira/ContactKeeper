@@ -5,13 +5,14 @@ using ContactKeeper.Models;
 using ContactKeeper.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using Swashbuckle.AspNetCore.Annotations;
 namespace ContactKeeper.Controllers
 {
 
     [ApiController]
     [Route("UserContact")]
-    public class UserContactController : ControllerBase            
+    public class UserContactController : ControllerBase
     {
         private readonly DataContext _context;
         private readonly IunitOfWork _iunitOfWork;
@@ -22,59 +23,100 @@ namespace ContactKeeper.Controllers
             DataContext context,
             IUserContactRepository userContactRepository,
             IunitOfWork iunitOfWork
-        )        
+        )
         {
-            _context = context;            
+            _context = context;
             _userContactRepository = userContactRepository;
             _iunitOfWork = iunitOfWork;
         }
 
         #region [addUser]
         [HttpPost]
-        //[Authorize(Roles = "teste")]
-        [AllowAnonymous]
+        [Authorize (Roles = "user, admin")]
         [SwaggerOperation(
-            Summary = "Add a new user contact",
-            Description = "Add a new user contact on users to the database" 
+            Summary = "[AUTH REQUIRED] Add a new contact for the logged-in user",
+            Description = "Creates a contact only for the authenticated user"
         )]
         public async Task<ActionResult<UserContact>> AddUserContact([FromBody] UserContact userContact)
         {
-
             if (!ModelState.IsValid)
-            {
-            return BadRequest(ModelState); // Retorna erros de validação padrão
-            }                                 
+                return BadRequest(ModelState);
 
             _iunitOfWork.BeginTransaction();
             await _iunitOfWork.UserContactRepository.AddUserContact(userContact);
             await _iunitOfWork.CommitAsync();
-            return Ok(userContact);
 
+            return Ok(userContact);
         }
         #endregion
-       
+
         #region [getallUsersContacts]
         [HttpGet]
         [Authorize(Roles = "admin")]
         [SwaggerOperation(
-            Summary = "Get all users contacts",
+            Summary = "[AUTH REQUIRED] Get all users contacts",
             Description = "Get all users contacts from the database"
-            //Description = "Get all users from the database"
-        )]   
+        )]
         public async Task<ActionResult<List<UserContact>>> GetUserContact()
         {
-            var users = await _iunitOfWork.UserContactRepository.GetUserContact();
+            
             try
             {
+                var users = await _iunitOfWork.UserContactRepository.GetUserContact();
                 return Ok(users);
             }
-            catch
+            catch(Exception ex)    
+
             {
-                return BadRequest(new{message="cant  list contact users"});  
+                return BadRequest(new { message = "can't list contact users", error = ex.Message });
             }
         }
         #endregion
 
-    
+        #region [getUserContactById]
+        [HttpGet]
+        [Route("id/{userId:int}")]
+        [Authorize(Roles = "admin")]
+        [SwaggerOperation(
+            Summary = "[AUTH REQUIRED] Get user contact by id",
+            Description = "Get any user on table by your id"
+        )]
+        public async Task<ActionResult<IEnumerable<UserContact>>> GetUserContactById(int userId)
+        {
+            try
+            {
+                var user = await _iunitOfWork.UserContactRepository.GetUserContactById(userId);
+                if(user == null)
+                    return NotFound(new{Message= "ID not found!"});
+
+                return Ok(user);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(new { message = "Can't handle Id user Contact", error = ex.Message });
+            }
+        }
+        #endregion
+
+        #region [GetUsersByDdd]
+        [Route("ddd/{ddd:int}")]
+        [Authorize(Roles = "user, admin")]
+        [SwaggerOperation(
+            Summary = "[AUTH REQUIRED] Get users by DDD",
+            Description = "Get users from the database by their DDD"
+        )]
+        [HttpGet]
+        public async Task<IActionResult> GetUsersByDdd(int ddd)
+        {
+            var users = await _userContactRepository.GetInfoUserByDdd(ddd);
+            if (users == null || users.Count == 0)
+            {
+            return NotFound(new { message = "No users found with the specified DDD." });
+            }
+            return Ok(users);
+        }            
+        #endregion
+
+
     }
 }

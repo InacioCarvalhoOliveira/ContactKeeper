@@ -13,5 +13,7 @@ namespace ContactKeeper.Data
       
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
         public DbSet<User> Users { get; set; }
+        //ublic DbSet<UserDto> UserDto { get; set; }
+        public DbSet<UserContact> UserContacts { get; set; }
     }
 }

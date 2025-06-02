@@ -6,12 +6,33 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Annotations;
 using Microsoft.OpenApi.Any;
 using ContactKeeper.Models;
+using ContactKeeper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using ContactKeeper.Ineterfaces;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
+using ContactKeeper.Microservices;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+// Add CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 builder.Services.AddSwaggerGen(c =>
 {
      c.SwaggerDoc("v1", new OpenApiInfo
@@ -47,10 +68,11 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddScoped<IuserRepository, UserRepository>();
-builder.Services.AddScoped<UnitOfWork>();
-builder.Services.AddScoped<IunitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IUserContactRepository, UserContactRepository>();
+//builder.Services.AddScoped<UnitOfWork>();
+builder.Services.AddSingleton<HalfOpenCircuit>();
 builder.Services.AddScoped<DataContext>();
-builder.Services.AddScoped<DbSession>();
+builder.Services.AddSingleton<DbSession>();
 builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("DatabaseSettings"));
 builder.Services.AddMemoryCache();
 
@@ -89,16 +111,25 @@ else{
     app.UseHsts();
 }
 
-app.UseRouting();
-app.UseSwagger();
-app.UseSwaggerUI(c => 
+app.UseSwaggerUI(c =>
 {
-c.SwaggerEndpoint("/swagger/v1/swagger.json", "ContactKeeper API v1");
-c.RoutePrefix = string.Empty;
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "ContactKeeper API v1");
+    c.RoutePrefix = string.Empty;
 
 });
 
-    
+app.UseMetricServer();
+app.UseHttpMetrics();
+
+app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.UseCors("AllowAll");
+
+app.UseSwagger();
+app.UseReDoc();
 
 app.MapControllers();
 app.UseCors("AllowAll");

@@ -18,6 +18,7 @@ namespace ContactKeeper.Services
                 {
                     new Claim(ClaimTypes.Name, user.Username.ToString()),
                     new Claim(ClaimTypes.Role, user.Role.ToString()),
+                    new Claim("unique_name", user.Id.ToString()),
                     //new Claim(ClaimTypes.Role, user.Password.ToString()),
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(15),

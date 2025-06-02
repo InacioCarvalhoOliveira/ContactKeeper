@@ -8,17 +8,14 @@ Este projeto se baseia na ideia de Gerenciamento de contatos Telefônicos. Com e
 
 [Vídeo apresentação](https://drive.google.com/file/d/1f_8iV_mLuVFRgR1cqBZ8iT8y56miFAGL/view?usp=sharing "apresentação")
 
+
 ## 🥷 Tecnologias
 
 - Linguagem: C#(Sdk8.0)
 - Framework: ASP.NET CORE (Dapper/EF)
 - Banco de Dados: SQL Server(em container Docker)
 - Entity Framework Migrations,
-- implementação da documentação swagger, DataAnnotations, UnitOfWork, Singleton, Hot e Cold Cache,
-- Azure functions,
-- Observabilidade com Grafana,
-- Microsserviços,
-- resiliência com Circuit Breaker Half-Open.
+- implementação da documentação swagger, DataAnnotations, UnitOfWork, Singleton, Hot e Cold Cache.
 
 ## ⚒️ Configuração
 
@@ -29,7 +26,7 @@ Pré-requisito: Dotnet sdk8.0
 
 ## 📍End-Points API:
 
-![1738016751476](image/README/api.png)
+![1738016751476](image/README/1738016751476.png)
 
 ## 👩‍💻 Autor
 

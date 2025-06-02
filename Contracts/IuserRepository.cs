@@ -4,10 +4,10 @@ namespace ContactKeeper.Contracts
 {
     public interface IuserRepository
     {
-        Task<IEnumerable<User>> GetUsers();
+        Task<List<User>> GetUsers();
         Task<User> GetUserById(int id);      
-        Task<IList<User>> GetInfoUserByDdd(int ddd);
         Task<User> AddUser(User user);
+        Task<UserDto> Authenticate(string username, string role, string password);
         Task<User> UpdateUser(User user);
         Task<User> DeleteUser(int id);
     }

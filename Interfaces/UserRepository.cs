@@ -85,6 +85,56 @@ namespace ContactKeeper.Interfaces
             };
 
         }
+
+
+        public async Task<User> AddUser(User user)
+        {
+          try
+            {
+                if (string.IsNullOrWhiteSpace(user.Role))
+                {
+                    user.Role = "user";
+                }
+
+                _context.Users.Add(user);
+
+                await _context.SaveChangesAsync();
+
+                var newUser = await _context.Users
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Id == user.Id);
+
+                return newUser ?? user; 
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error adding user: {ex.Message}");
+                return null;
+            }
+
+
+        }
+        public async Task<UserDto> Authenticate(string username, string role, string password)
+        {
+
+            var user = await _context.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Username == username
+                && x.Role == role
+                && x.Password == password);
+            if (user == null)
+            {
+                return null;
+            }
+            return new UserDto
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Password = user.Password,
+                Role = user.Role
+            };
+
+        }
         else
         {
             throw new ArgumentException("DDD inválido.");

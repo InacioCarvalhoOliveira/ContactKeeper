@@ -35,6 +35,15 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddSwaggerGen(c =>
 {
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+builder.Services.AddSwaggerGen(c =>
+{
      c.SwaggerDoc("v1", new OpenApiInfo
         {
             Title = "ContactKeeper API",
@@ -117,6 +126,9 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = string.Empty;
 
 });
+
+app.UseMetricServer();
+app.UseHttpMetrics();
 
 app.UseMetricServer();
 app.UseHttpMetrics();

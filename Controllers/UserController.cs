@@ -2,7 +2,6 @@ using System.Text;
 using System.Text.Json;
 using ContactKeeper.Services.Repositories;
 using ContactKeeper.Data;
-using ContactKeeper.Services.Interfaces;
 using ContactKeeper.Microservices;
 using ContactKeeper.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -124,7 +123,7 @@ namespace ContactKeeper.Controllers
         }
         #endregion
 
-        // #region [Login]
+        #region [Login]
         // [HttpPost]
         // [Route("login")]
         // [AllowAnonymous]
@@ -146,7 +145,7 @@ namespace ContactKeeper.Controllers
         //         token = token
         //     };
         // }
-        // #endregion
+        #endregion
 
         #region [Authenticate on Azure]
         [HttpPost]

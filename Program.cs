@@ -59,8 +59,8 @@ builder.Services.AddControllers()
 
 builder.Services.AddScoped<IuserRepository, UserRepository>();
 builder.Services.AddScoped<IUserContactRepository, UserContactRepository>();
-//builder.Services.AddScoped<UnitOfWork>();
-builder.Services.AddSingleton<HalfOpenCircuit>();
+builder.Services.AddScoped<IunitOfWork, UnitOfWork>();
+builder.Services.AddScoped<HalfOpenCircuit>();
 builder.Services.AddScoped<DataContext>();
 builder.Services.AddSingleton<DbSession>();
 builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("DatabaseSettings"));

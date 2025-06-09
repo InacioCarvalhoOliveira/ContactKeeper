@@ -10,12 +10,12 @@ namespace ContactKeeper.Services.Interfaces
     public class UserRepository : IuserRepository
     {
         private readonly DataContext _context;
-        private readonly IMemoryCache _cache;
+        //private readonly IMemoryCache _cache;
 
         public UserRepository(DataContext context, IMemoryCache cache)
         {
             _context = context;
-            _cache = cache;
+            //_cache = cache;
         }
 
         public async Task<List<User>> GetUsers()

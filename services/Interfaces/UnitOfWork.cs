@@ -10,7 +10,7 @@ namespace ContactKeeper.Services.Interfaces
     public sealed class UnitOfWork : DbSession, IunitOfWork
     {
         private readonly DataContext _context;
-        private readonly IuserRepository _userRepository;
+        //private readonly IuserRepository _userRepository;
         private IDbContextTransaction _transaction;
 
        public UnitOfWork(IOptions<DatabaseSettings> 
@@ -19,7 +19,7 @@ namespace ContactKeeper.Services.Interfaces
         IuserRepository userRepository) : base(databaseSettings)
         {
             _context = context;
-            _userRepository = userRepository;
+            //_userRepository = userRepository;
         }
 
         public void BeginTransaction()
@@ -46,7 +46,7 @@ namespace ContactKeeper.Services.Interfaces
             _transaction?.Rollback();
         }
 
-        public IuserRepository UserRepository => _userRepository;
+       // public IuserRepository UserRepository => _userRepository;
 
         public void Dispose()
         {

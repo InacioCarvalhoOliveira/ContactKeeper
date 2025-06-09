@@ -56,6 +56,7 @@ namespace ContactKeeper.Controllers
 
         #region [getallUsers]
         [HttpGet]
+        [Authorize(Roles = "admin")]
         [SwaggerOperation(
             Summary = "[AUTH REQUIRED] Get all users",
             Description = "Get all users from the database"
@@ -64,7 +65,7 @@ namespace ContactKeeper.Controllers
         {
             try
             {
-                var users = await _iunitOfWork.UserRepository.GetUsers();
+                var users = await _userRepository.GetUsers();
                 return Ok(users);
             }
             catch(Exception ex)
@@ -87,7 +88,7 @@ namespace ContactKeeper.Controllers
 
             try
             {
-                var user = await _iunitOfWork.UserRepository.GetUserById(id);
+                var user = await _userRepository.GetUserById(id);
                 if (user == null)
                     return NotFound(new { message = "user not found" });
                 return Ok(user);
@@ -237,7 +238,7 @@ namespace ContactKeeper.Controllers
             try
             {
                 _iunitOfWork.BeginTransaction();
-                await _iunitOfWork.UserRepository.UpdateUser(user);
+                await _userRepository.UpdateUser(user);
                 await _iunitOfWork.CommitAsync();
                 return Ok(user);
             }
@@ -262,7 +263,7 @@ namespace ContactKeeper.Controllers
             try
             {
                 _iunitOfWork.BeginTransaction();
-                await _iunitOfWork.UserRepository.DeleteUser(id);
+                await _userRepository.DeleteUser(id);
                 await _iunitOfWork.CommitAsync();
                 return NoContent();
             }

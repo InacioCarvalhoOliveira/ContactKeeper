@@ -1,21 +1,20 @@
+using ContactKeeper;
+using ContactKeeper.Services.Repositories;
 using ContactKeeper.Services.Interfaces;
-using ContactKeeper.Services.Repositories;using ContactKeeper.Data;
+using ContactKeeper.Data;
+using ContactKeeper.Microservices;
+using ContactKeeper.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Annotations;
 using Microsoft.OpenApi.Any;
-using ContactKeeper.Models;
-using ContactKeeper;
-//using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
-using ContactKeeper.Microservices;
+using System.Security.Claims;
 using Prometheus;
-using ContactKeeper.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,33 +33,66 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddSwaggerGen(c =>
 {
-     c.SwaggerDoc("v1", new OpenApiInfo
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "ContactKeeper API",
+        Version = "v1",
+        Description = "API para Cadastro e consulta de Contatos telefônicos",
+        Contact = new OpenApiContact
         {
-            Title = "ContactKeeper API",
-            Version = "v1",
-            Description = "API para Cadastro e consulta de Contatos telefônicos",
-            Contact = new OpenApiContact
+            Name = "Inacio Carvalho de Oliveira",
+            Url = new Uri("http://localhost:5059/api-docs/index.html"),
+            Extensions = { { "LinkedIn", new OpenApiString("https://www.linkedin.com/in/inacio-carvalho-oliveira") } },
+        }
+
+    });
+    c.EnableAnnotations();
+
+    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Example: 'Bearer {token}'",
+        Name = "Authorization",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+     c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
             {
-                Name = "Inacio Carvalho de Oliveira",
-                Url = new Uri("http://localhost:5059/api-docs/index.html"),
-                Extensions = { { "LinkedIn", new OpenApiString("https://www.linkedin.com/in/inacio-carvalho-oliveira") } },
-            }
-            
-        });   
-        c.EnableAnnotations();   
-    });        
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
 builder.Services.AddControllers()
     .AddJsonOptions(options => {
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
         options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
         options.JsonSerializerOptions.PropertyNamingPolicy = null;
     });
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
 
-
+builder.Services.AddScoped<IunitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IuserRepository, UserRepository>();
 builder.Services.AddScoped<IUserContactRepository, UserContactRepository>();
-builder.Services.AddScoped<IunitOfWork, UnitOfWork>();
-builder.Services.AddScoped<HalfOpenCircuit>();
+//builder.Services.AddScoped<UnitOfWork>();
+builder.Services.AddSingleton<HalfOpenCircuit>();
 builder.Services.AddScoped<DataContext>();
 builder.Services.AddSingleton<DbSession>();
 builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("DatabaseSettings"));
@@ -81,6 +113,27 @@ builder.Services.AddDbContext<DataContext>(options =>
         options.UseSqlServer(databaseSettings?.ProductionConnection);
     }
 });
+
+
+var key = System.Text.Encoding.ASCII.GetBytes(Settings.Secret);
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(x =>
+{
+    x.RequireHttpsMetadata = false;
+    x.SaveToken = true;
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        RoleClaimType = ClaimTypes.Role
+    };
+});
+
 
 var app = builder.Build();
 
@@ -106,7 +159,7 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "ContactKeeper API v1");
     c.RoutePrefix = string.Empty;
 
-});
+});   
 
 app.UseMetricServer();
 app.UseHttpMetrics();
@@ -116,12 +169,18 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseSwagger();
-
-app.MapControllers();
 app.UseCors("AllowAll");
 
-app.UseHttpsRedirection();
+app.UseSwagger();
 app.UseReDoc();
-app.Run();
 
+app.MapControllers();
+
+
+using (var scope = app.Services.CreateScope())
+{
+   var db = scope.ServiceProvider.GetRequiredService<DataContext>();
+   db.Database.Migrate();
+}
+
+app.Run();

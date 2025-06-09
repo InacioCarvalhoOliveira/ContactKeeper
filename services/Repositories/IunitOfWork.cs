@@ -4,7 +4,7 @@ namespace ContactKeeper.Services.Repositories
 {
     public interface IunitOfWork
     {
-        IuserRepository UserRepository { get; }
+        //IuserRepository UserRepository { get; }
         void BeginTransaction();
         Task CommitAsync();
         void Rollback();

@@ -31,7 +31,7 @@ namespace ContactKeeper.Controllers
 
         #region [addUser]
         [HttpPost]
-        [Authorize (Roles = "user, admin")]
+        [AllowAnonymous]
         [SwaggerOperation(
             Summary = "[AUTH REQUIRED] Add a new contact for the logged-in user",
             Description = "Creates a contact only for the authenticated user"
@@ -99,7 +99,7 @@ namespace ContactKeeper.Controllers
 
         #region [GetUsersByDdd]
         [Route("ddd/{ddd:int}")]
-        [Authorize(Roles = "user, admin")]
+        [AllowAnonymous]
         [SwaggerOperation(
             Summary = "[AUTH REQUIRED] Get users by DDD",
             Description = "Get users from the database by their DDD"

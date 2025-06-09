@@ -1,6 +1,5 @@
-using ContactKeeper.Interfaces;
-using ContactKeeper.Contracts;
-using ContactKeeper.Data;
+using ContactKeeper.Services.Interfaces;
+using ContactKeeper.Services.Repositories;using ContactKeeper.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Annotations;
@@ -16,7 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using ContactKeeper.Microservices;
 using Prometheus;
-using ContactKeeper.Interfaces;
+using ContactKeeper.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 

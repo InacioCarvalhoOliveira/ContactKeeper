@@ -7,8 +7,7 @@ dotnet add ContactKeeper.Test/ContactKeeper.Test.csproj reference ../ContactKeep
 
 
 ###
-using ContactKeeper.Contracts;
-using ContactKeeper.Controllers;
+using ContactKeeper.Services.Repositories;using ContactKeeper.Controllers;
 using NUnit.Framework;
 using Moq; // Certifique-se de incluir essa linha
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +15,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ContactKeeper.Models;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using ContactKeeper.Interfaces;
+using ContactKeeper.Services.Interfaces;
 using ContactKeeper.Data;
 using Microsoft.EntityFrameworkCore;
 

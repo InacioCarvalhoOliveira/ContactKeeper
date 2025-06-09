@@ -1,6 +1,5 @@
-using ContactKeeper.Contracts;
-using ContactKeeper.Data;
-using ContactKeeper.Interfaces;
+using ContactKeeper.Services.Repositories;using ContactKeeper.Data;
+using ContactKeeper.Services.Interfaces;
 using ContactKeeper.Models;
 using ContactKeeper.Services;
 using Microsoft.AspNetCore.Authorization;

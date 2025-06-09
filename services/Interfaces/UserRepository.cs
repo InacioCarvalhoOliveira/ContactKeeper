@@ -1,11 +1,11 @@
 using System.Text.Json;
-using ContactKeeper.Contracts;
+using ContactKeeper.Services.Repositories;
 using ContactKeeper.Data;
 using ContactKeeper.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace ContactKeeper.Interfaces
+namespace ContactKeeper.Services.Interfaces
 {
     public class UserRepository : IuserRepository
     {

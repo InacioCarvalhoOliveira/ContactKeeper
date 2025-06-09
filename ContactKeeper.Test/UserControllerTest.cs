@@ -1,7 +1,6 @@
-// using ContactKeeper.Contracts;
-// using ContactKeeper.Controllers;
+// using ContactKeeper.Services.Repositories;// using ContactKeeper.Controllers;
 // using ContactKeeper.Data;
-// using ContactKeeper.Interfaces;
+// using ContactKeeper.Services.Interfaces;
 // using ContactKeeper.Microservices;
 // using ContactKeeper.Models;
 // using Microsoft.AspNetCore.Mvc;

@@ -1,6 +1,6 @@
 using ContactKeeper.Models;
 
-namespace ContactKeeper.Contracts
+namespace ContactKeeper.Services.Repositories
 {
     public interface IuserRepository
     {

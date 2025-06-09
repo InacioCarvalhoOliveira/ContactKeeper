@@ -1,6 +1,6 @@
-using System.Threading.Tasks;
+using ContactKeeper.Services.Repositories;
 
-namespace ContactKeeper.Contracts
+namespace ContactKeeper.Services.Repositories
 {
     public interface IunitOfWork
     {

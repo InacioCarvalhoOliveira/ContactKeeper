@@ -1,11 +1,11 @@
 using System.Drawing;
-using ContactKeeper.Contracts;
+using ContactKeeper.Services.Repositories;
 using ContactKeeper.Data;
 using ContactKeeper.Models;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Options;
 
-namespace ContactKeeper.Interfaces
+namespace ContactKeeper.Services.Interfaces
 {
     public sealed class UnitOfWork : DbSession, IunitOfWork
     {

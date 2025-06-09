@@ -1,8 +1,8 @@
 using System.Text;
 using System.Text.Json;
-using ContactKeeper.Contracts;
+using ContactKeeper.Services.Repositories;
 using ContactKeeper.Data;
-using ContactKeeper.Interfaces;
+using ContactKeeper.Services.Interfaces;
 using ContactKeeper.Microservices;
 using ContactKeeper.Models;
 using Microsoft.AspNetCore.Authorization;

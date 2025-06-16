@@ -161,19 +161,14 @@ app.UseSwaggerUI(c =>
 
 });   
 
-app.UseMetricServer();
-app.UseHttpMetrics();
-
+app.UseCors("AllowAll");
+app.UseSwagger();
 app.UseRouting();
-
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.UseCors("AllowAll");
-
-app.UseSwagger();
+app.UseMetricServer();
+app.UseHttpMetrics();
 app.UseReDoc();
-
 app.MapControllers();
 
 

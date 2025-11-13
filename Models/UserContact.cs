@@ -16,8 +16,6 @@ namespace ContactKeeper.Models
         [ForeignKey("User")]
         public int UserId { get; set; }
 
-        
-
         // EXAMPLE: 55-11-5555-5555 (ddi-ddd-localnumber)
         [Required(ErrorMessage = "Please enter a valid International DDI")]
         [MinLength(2, ErrorMessage = "This field must have at least 2 characters")]

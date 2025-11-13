@@ -39,7 +39,6 @@ namespace ContactKeeper.Ineterfaces
 
                 return userContact;
 
-
             }
             else
             {

@@ -101,7 +101,8 @@ jobs:
               -d ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-api:latest
 
         - name: Run tests and health check
-          env: ASPNETCORE_ENVIRONMENT: ${{ secrets.ENV_DEVOPS }}
+          env: 
+            ASPNETCORE_ENVIRONMENT: ${{ secrets.ENV_DEVOPS }}
           run: |
             echo "Waiting for API to initialize..."
               for i in {1..30}; do

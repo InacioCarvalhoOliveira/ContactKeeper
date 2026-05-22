@@ -15,7 +15,7 @@ namespace ContactKeeper.Services.Queues
                 HostName = "localhost",
                 UserName = "mqsa",
                 Password = "GosthTro0per.ZUZ236",
-                Port = 5672,
+                Port = 8081,
                 VirtualHost = "/"
             };
 

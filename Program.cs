@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
 using Prometheus;
+using RabbitMQ.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -88,6 +89,7 @@ builder.Services.AddCors(options =>
         });
 });
 
+
 builder.Services.AddScoped<IunitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IuserRepository, UserRepository>();
 builder.Services.AddScoped<IUserContactRepository, UserContactRepository>();
@@ -97,6 +99,11 @@ builder.Services.AddScoped<DataContext>();
 builder.Services.AddSingleton<DbSession>();
 builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("DatabaseSettings"));
 builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<IConnection>(provider =>
+{
+    var factory = new ConnectionFactory { HostName = "localhost" };
+    return (IConnection)factory.CreateConnectionAsync();
+});
 
 builder.Services.AddDbContext<DataContext>(options =>
 {

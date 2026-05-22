@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Polly.CircuitBreaker;
 using Prometheus;
 using Swashbuckle.AspNetCore.Annotations;
+using ContactKeeper.Services.Queues;
 
 namespace ContactKeeper.Controllers
 {
@@ -186,6 +187,10 @@ namespace ContactKeeper.Controllers
                             Role = user.Role,
                         };
 
+                        // capturando o payload para envio na fila teste do RabbitMQ
+                        UserQueues userQueues = new UserQueues();
+                        await userQueues.AuthUserSenderAsync(JsonSerializer.Serialize(payload));
+                        
                         using var httpClient = new HttpClient();
                         var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
 

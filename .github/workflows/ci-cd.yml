@@ -40,20 +40,19 @@ jobs:
   Test-Database:
     runs-on: ubuntu-latest
     needs: [Build-Dockerfile]
-    steps:
+    steps:  
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Create Docker network
-        run: |
-            echo "Creating Docker network..."
-            docker network create contactkeeper-network || true
-            echo "Verifying network exists..."
-            docker network inspect contactkeeper-network > /dev/null || exit 1
-            echo "Network ready!" run: docker network create contactkeeper-network
-
+        run: docker network create contactkeeper-network || docker network ls | grep contactkeeper-network
       - name: Set up SQL Server
         run: |
+            # Verify network exists before proceeding
+            if ! docker network ls | grep -q contactkeeper-network; then
+              echo "ERROR: Docker network was not created successfully"
+              exit 1
+            fi
             echo "Starting SQL Server container..."
             docker run --name sqlserver \
               --network contactkeeper-network \
@@ -102,6 +101,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Verify Docker network
+        run: |
+            if ! docker network ls | grep -q contactkeeper-network; then
+              echo "ERROR: contactkeeper-network not found. Creating it now..."
+              docker network create contactkeeper-network
+            fi
+            docker network ls
+
       - name: Run API container
         run: |
             docker run --name contactkeeper \

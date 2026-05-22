@@ -105,7 +105,7 @@ jobs:
         run: |
           echo "Waiting for API to initialize..."
           for i in {1..30}; do
-            if curl -f http://localhost:5000/Health/HealthDataBase > /dev/null 2>&1; then
+            if curl -f ${{ secrets.API_URL }}/Health/HealthDataBase > /dev/null 2>&1; then
               echo "API is ready!"
               break
             fi

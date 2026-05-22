@@ -103,9 +103,11 @@ jobs:
         env:
           ASPNETCORE_ENVIRONMENT: ${{ secrets.ENV_DEVOPS }}
         run: |
+          echo "removing migrations and database files if exist"
+          rm -rf ./ContactKeeper.Data/Migrations
           echo "Waiting for API to initialize..."
           for i in {1..30}; do
-            if curl -f ${{ secrets.API_URL }}/Health/HealthDataBase > /dev/null 2>&1; then
+            if curl -f http://localhost:5001/Health/HealthDataBase > /dev/null 2>&1; then
               echo "API is ready!"
               break
             fi

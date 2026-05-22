@@ -45,7 +45,12 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Create Docker network
-        run: docker network create contactkeeper-network
+        run: |
+            echo "Creating Docker network..."
+            docker network create contactkeeper-network || true
+            echo "Verifying network exists..."
+            docker network inspect contactkeeper-network > /dev/null || exit 1
+            echo "Network ready!" run: docker network create contactkeeper-network
 
       - name: Set up SQL Server
         run: |

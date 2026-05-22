@@ -95,7 +95,7 @@ jobs:
         run: |
           docker run --name contactkeeper \
             --network contactkeeper-network \
-            -p 5000:5000 \
+            -p 5000:5001 \
             -e "ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=ContactKeeper;User Id=sa;Password=${{ secrets.SQL_SERVER_PASSWORD }};TrustServerCertificate=True;" \
             -d ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-api:latest
 

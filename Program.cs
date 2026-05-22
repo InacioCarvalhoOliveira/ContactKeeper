@@ -112,12 +112,12 @@ builder.Services.AddDbContext<DataContext>(options =>
     if (builder.Environment.IsDevelopment())
     {
         // Use the development connection string
-        options.UseSqlServer(databaseSettings?.DevelopmentConnection);
+        options.UseSqlServer(databaseSettings?.Development);
     }
     else
     {
         // Use the production connection string
-        options.UseSqlServer(databaseSettings?.ProductionConnection);
+        options.UseSqlServer(databaseSettings?.Production);
     }
 });
 

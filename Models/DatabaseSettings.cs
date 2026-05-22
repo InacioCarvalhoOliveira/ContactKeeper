@@ -2,9 +2,9 @@ namespace ContactKeeper.Models
 {
     public class DatabaseSettings
     {   
-        public string? ConnectionString { get; set; }
-        public string? DevelopmentConnection { get; set; }
-        public string? ProductionConnection { get; set; }
+        public string? Devops { get; set; }
+        public string? Development { get; set; }
+        public string? Production { get; set; }
  
     }   
 }

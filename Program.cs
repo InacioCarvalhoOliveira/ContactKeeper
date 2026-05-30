@@ -184,6 +184,12 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
     try
     {
+        if (app.Environment.IsDevelopment())
+        {
+            await dbContext.Database.EnsureDeletedAsync();
+            await dbContext.Database.EnsureCreatedAsync();
+        }
+        
         dbContext.Database.Migrate();
     }
     catch (Exception ex)

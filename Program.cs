@@ -181,8 +181,16 @@ app.MapControllers();
 
 using (var scope = app.Services.CreateScope())
 {
-   var db = scope.ServiceProvider.GetRequiredService<DataContext>();
-   db.Database.Migrate();
+    var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
+    try
+    {
+        dbContext.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Migration error: {ex.Message}");
+        throw;
+    }
 }
 
 app.Run();

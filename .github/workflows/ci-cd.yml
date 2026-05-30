@@ -102,22 +102,21 @@ jobs:
 
       - name: Run tests and health check
         run: |
-          set -euo pipefail
-
+          echo "removing migrations and database files if exist"
+          rm -rf ./ContactKeeper.Data/Migrations
           echo "Waiting for API to initialize..."
-           for i in {1..30}; do
-              if curl --fail --silent --show-error http://localhost:5000/Health/HealthDataBase > /dev/null; then
-                echo "API is ready!"
-                ready=1
+          for i in {1..30}; do
+            if curl -f http://localhost:5000/Health/HealthDataBase > /dev/null 2>&1; then
+              echo "API is ready!"
               break
-              fi
-                echo "Waiting for API... ($i/30)"
-                sleep 2
-              done
-              if [ "${ready:-0}" -ne "1" ]; then
-                echo "API failed to start"
-              docker logs contactkeeper || true
-              exit 1
-              fi
-   
-              dotnet test ./ContactKeeper.Test/ContactKeeper.Test.csproj --configuration Release --verbosity normal
+            fi
+            echo "Waiting for API... ($i/30)"
+            sleep 2
+          done
+          if [ $i -eq 30 ]; then
+            echo "API failed to start"
+            docker logs contactkeeper
+            exit 1
+          fi
+
+          dotnet test ./ContactKeeper.Test/ContactKeeper.Test.csproj --configuration Release --verbosity normal

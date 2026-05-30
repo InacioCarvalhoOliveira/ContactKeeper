@@ -44,6 +44,12 @@
         - name: Checkout code
           uses: actions/checkout@v2
 
+        - name: Checkout Functions repository
+          uses: actions/checkout@v2
+          with:
+            repository: ${{ github.repository_owner }}/Functions
+            path: Functions
+
         - name: Clean up migrations 
           run: |
             echo "Removing migrations and database files if exist"
@@ -53,7 +59,7 @@
           run: |
             echo "Building Docker image locally without pushing..."
             docker build -t ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-api:latest --no-cache -f ./Dockerfile .    
-            docker build -t ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-functions:latest --no-cache -f ../Functions/Dockerfile ../Functions    
+            docker build -t ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-functions:latest --no-cache -f ./Functions/Dockerfile ./Functions    
 
         - name: Create Docker network
           run: docker network create contactkeeper-network
@@ -109,7 +115,7 @@
               -e ASPNETCORE_URLS=http://+:80 \
               -p 7124:80 \
               -d ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-functions:latest
-              
+
         - name: Wait for Functions
           run: |
             echo "Waiting for Functions to initialize..."

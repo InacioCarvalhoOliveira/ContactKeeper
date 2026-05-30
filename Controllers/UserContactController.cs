@@ -4,7 +4,6 @@ using ContactKeeper.Models;
 using ContactKeeper.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using Swashbuckle.AspNetCore.Annotations;
 namespace ContactKeeper.Controllers
 {

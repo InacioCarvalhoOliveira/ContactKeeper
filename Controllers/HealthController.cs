@@ -1,12 +1,9 @@
-using ContactKeeper.Services.Repositories;using ContactKeeper.Data;
+using ContactKeeper.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.VisualBasic;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace ContactKeeper.Controller
+namespace ContactKeeper.Controllers
 {
     [ApiController]
     [Route("Health")]
@@ -28,8 +25,7 @@ namespace ContactKeeper.Controller
         {
             try
             {
-
-
+                
                 bool canConnect = _context.Database.CanConnect();
                 if (canConnect == true)
                 {

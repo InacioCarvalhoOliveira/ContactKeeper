@@ -112,7 +112,7 @@ builder.Services.AddDbContext<DataContext>(options =>
     if (builder.Environment.IsDevelopment())
     {
         // Use the development connection string
-        options.UseSqlServer(databaseSettings?.Development);
+        options.UseSqlServer(databaseSettings?.ConnectionString);
     }
     else
     {
@@ -179,10 +179,12 @@ app.UseReDoc();
 app.MapControllers();
 
 
-// using (var scope = app.Services.CreateScope())
-// {
-//    var db = scope.ServiceProvider.GetRequiredService<DataContext>();
-//    db.Database.Migrate();
-// }
+using (var scope = app.Services.CreateScope())
+{
+   var db = scope.ServiceProvider.GetRequiredService<DataContext>();
+   db.Database.Migrate();
+}
 
 app.Run();
+
+public partial class Program { }

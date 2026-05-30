@@ -1,4 +1,4 @@
-namespace ContactKeeper.Models
+namespace ContactKeeper.Models.Test
 {
     public class DatabaseSettings
     {

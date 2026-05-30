@@ -187,9 +187,9 @@ namespace ContactKeeper.Controllers
                             Role = user.Role,
                         };
 
-                        // capturando o payload para envio na fila teste do RabbitMQ
-                        UserQueues userQueues = new UserQueues();
-                        await userQueues.AuthUserSenderAsync(JsonSerializer.Serialize(payload));
+                        // capturando o payload para envio na fila teste do RabbitMQ - FASE 4
+                        //UserQueues userQueues = new UserQueues();
+                        //await userQueues.AuthUserSenderAsync(JsonSerializer.Serialize(payload));
                         
                         using var httpClient = new HttpClient();
                         var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");

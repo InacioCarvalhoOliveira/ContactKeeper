@@ -187,14 +187,13 @@ using (var scope = app.Services.CreateScope())
         if (app.Environment.IsDevelopment())
         {
             await dbContext.Database.EnsureDeletedAsync();
-            await dbContext.Database.EnsureCreatedAsync();
         }
-        
-        dbContext.Database.Migrate();
+
+        await dbContext.Database.MigrateAsync();
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"Migration error: {ex.Message}");
+        Console.WriteLine($"Migration error: {ex}");
         throw;
     }
 }

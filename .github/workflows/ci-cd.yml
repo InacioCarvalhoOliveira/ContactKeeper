@@ -49,6 +49,11 @@ jobs:
           echo "Removing migrations and database files if exist"
           rm -rf ./ContactKeeper.Data/Migrations
 
+      - name: Rebuild Docker image locally (clean cache)
+        run: |
+          echo "Building Docker image locally without pushing..."
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-api:latest --no-cache -f ./Dockerfile .    
+
       - name: Create Docker network
         run: docker network create contactkeeper-network
 
@@ -107,8 +112,6 @@ jobs:
 
       - name: Run tests and health check
         run: |
-          echo "removing migrations and database files if exist"
-          rm -rf ./ContactKeeper.Data/Migrations
           echo "Waiting for API to initialize..."
           for i in {1..30}; do
             if curl -f http://localhost:5000/Health/HealthDataBase > /dev/null 2>&1; then

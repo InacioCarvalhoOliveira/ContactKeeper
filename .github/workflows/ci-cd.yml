@@ -119,7 +119,5 @@ jobs:
               docker logs contactkeeper || true
               exit 1
               fi
-
-              dotnet test ./ContactKeeper.Test/ContactKeeper.Test.csproj \
-                --configuration Release \ 
-                --verbosity normal
+   
+              dotnet test ./ContactKeeper.Test/ContactKeeper.Test.csproj --configuration Release --verbosity normal

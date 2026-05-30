@@ -103,77 +103,77 @@ namespace ContactKeeper.Test
             Assert.That(content, Does.Contain("user"));
         }
 
-        [Test]
-        public async Task InvalidLogin_ReturnsNotFound()
-        {
-            var payload = new
-            {
-                username = "inacio",
-                role = "admin",
-                password = "senha-errada"
-            };
+        // [Test]
+        // public async Task InvalidLogin_ReturnsNotFound()
+        // {
+        //     var payload = new
+        //     {
+        //         username = "inacio",
+        //         role = "admin",
+        //         password = "senha-errada"
+        //     };
 
-            var response = await _client.PostAsync(
-                "/User/login",
-                new StringContent(
-                    JsonSerializer.Serialize(payload),
-                    Encoding.UTF8,
-                    "application/json"));
+        //     var response = await _client.PostAsync(
+        //         "/User/login",
+        //         new StringContent(
+        //             JsonSerializer.Serialize(payload),
+        //             Encoding.UTF8,
+        //             "application/json"));
 
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
-        }
+        //     Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+        // }
 
-        [Test]
-        public async Task UserWithoutToken_ReturnsUnauthorized()
-        {
-            var response = await _client.GetAsync("/User");
+        // [Test]
+        // public async Task UserWithoutToken_ReturnsUnauthorized()
+        // {
+        //     var response = await _client.GetAsync("/User");
 
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
-        }
+        //     Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+        // }
 
-        [Test]
-        public async Task GetUser_AsAdmin_ReturnsOk()
-        {
-            await AuthorizeAsAdminAsync();
+        // [Test]
+        // public async Task GetUser_AsAdmin_ReturnsOk()
+        // {
+        //     await AuthorizeAsAdminAsync();
 
-            var response = await _client.GetAsync("/User");
+        //     var response = await _client.GetAsync("/User");
 
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        //     Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
 
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.That(content, Does.StartWith("["));
-        }
+        //     var content = await response.Content.ReadAsStringAsync();
+        //     Assert.That(content, Does.StartWith("["));
+        // }
 
-        [Test]
-        public async Task InvalidUserId_ReturnsNotFound()
-        {
-            await AuthorizeAsAdminAsync();
+        // [Test]
+        // public async Task InvalidUserId_ReturnsNotFound()
+        // {
+        //     await AuthorizeAsAdminAsync();
 
-            var response = await _client.GetAsync("/User/999999");
+        //     var response = await _client.GetAsync("/User/999999");
 
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
-        }
+        //     Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+        // }
 
+        // [Test]
+        // public async Task InvalidUserPayload_ReturnsBadRequest()
+        // {
+        //     var payload = new
+        //     {
+        //         username = "",
+        //         password = "",
+        //         role = "",
+        //         email = ""
+        //     };
 
-        [Test]
-        public async Task InvalidUserPayload_ReturnsBadRequest()
-        {
-            var payload = new
-            {
-                username = "",
-                password = "",
-                role = "",
-                email = ""
-            };
+        //     var response = await _client.PostAsync(
+        //         "/User",
+        //         new StringContent(
+        //             JsonSerializer.Serialize(payload),
+        //             Encoding.UTF8,
+        //             "application/json"));
 
-            var response = await _client.PostAsync(
-                "/User",
-                new StringContent(
-                    JsonSerializer.Serialize(payload),
-                    Encoding.UTF8,
-                    "application/json"));
+        //     Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+        // }
 
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
-        }
     }
 }

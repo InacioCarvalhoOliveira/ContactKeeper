@@ -1,7 +1,7 @@
 # Contact Keeper Dockerfile
 # This Dockerfile is used to build and run the Contact Keeper application in a Docker container.
 # [1] Build Stage
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 
 WORKDIR /app
 
@@ -17,7 +17,7 @@ COPY . .
 RUN dotnet publish "ContactKeeper.csproj" -c Release -o out
 
 # [4] Runtime Stage
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM mcr.microsoft.com/dotnet/aspnet:9.0
 
 WORKDIR /app
 

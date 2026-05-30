@@ -112,7 +112,7 @@ builder.Services.AddDbContext<DataContext>(options =>
     if (builder.Environment.IsDevelopment())
     {
         // Use the development connection string
-        options.UseSqlServer(databaseSettings?.Devops);
+        options.UseSqlServer(databaseSettings?.ConnectionString);
     }
     else
     {

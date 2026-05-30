@@ -99,6 +99,8 @@
               fi
           
               echo "Creating empty database..."
+              docker exec -i sqlserver sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "CREATE DATABASE ContactKeeper;" || { echo "Failed to create database"; docker logs sqlserver; exit 1; }
+      
         
         - name: Run API container
           run: |

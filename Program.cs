@@ -112,7 +112,7 @@ builder.Services.AddDbContext<DataContext>(options =>
     if (builder.Environment.IsDevelopment())
     {
         // Use the development connection string
-        options.UseSqlServer(databaseSettings?.ConnectionString);
+        options.UseSqlServer(databaseSettings?.Devops);
     }
     else
     {
@@ -186,5 +186,3 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
-
-public partial class Program { }

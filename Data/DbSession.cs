@@ -16,7 +16,7 @@ namespace ContactKeeper.Data
         public IDbTransaction Transaction { get; set; }
         public DbSession(IOptions<DatabaseSettings> databaseSettings)
         {
-            var connectionString = databaseSettings.Value.ConnectionString;
+            var connectionString = databaseSettings.Value.Devops;
             Connection = new SqlConnection(connectionString);
             Connection.Open();
         }

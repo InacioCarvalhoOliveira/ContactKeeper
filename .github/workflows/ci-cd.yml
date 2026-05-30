@@ -97,7 +97,7 @@ jobs:
             --network contactkeeper-network \
             -p 5000:5000 \
             -e "ASPNETCORE_ENVIRONMENT: ${{ secrets.ENV_DEVOPS }}" \
-            -e "DatabaseSettings__${{ secrets.ENV_DEVOPS }}=Server=sqlserver,1433;Database=ContactKeeper;User Id=sa;Password=${{ secrets.SQL_SERVER_PASSWORD }};TrustServerCertificate=True;" \
+            -e "${{ secrets.DB_SETTINGS }};Password=${{ secrets.SQL_SERVER_PASSWORD }};TrustServerCertificate=True;" \
             -d ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-api:latest
 
       - name: Run tests and health check

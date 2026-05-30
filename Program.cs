@@ -148,11 +148,9 @@ Console.WriteLine($"Current Environment: {builder.Environment.EnvironmentName}")
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
+     app.UseDeveloperExceptionPage();
 }
-
-else
-{
+else{
     app.UseReDoc(c =>
     {
         c.DocumentTitle = "REDDOC API DOCUMENTATION";
@@ -181,27 +179,18 @@ app.UseReDoc();
 app.MapControllers();
 
 
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
-    var currentEnvironment = builder.Configuration.GetSection("EnvironmentBuild").Get<EnvironmentBuild>();
-
-    try
-    {
-        if (app.Environment.IsEnvironment(currentEnvironment.Development))
-        {
-            await dbContext.Database.EnsureDeletedAsync();
-            Console.WriteLine("Database deleted successfully.");
-        }
-
-        await dbContext.Database.MigrateAsync();
-        Console.WriteLine("Database migration completed successfully.");
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Migration error: {ex}");
-        throw;
-    }
-}
+// using (var scope = app.Services.CreateScope())
+// {
+//     var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
+//     try
+//     {
+//         dbContext.Database.Migrate();
+//     }
+//     catch (Exception ex)
+//     {
+//         Console.WriteLine($"Migration error: {ex.Message}");
+//         throw;
+//     }
+// }
 
 app.Run();

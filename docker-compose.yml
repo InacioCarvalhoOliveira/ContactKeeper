@@ -1,10 +1,30 @@
-version: '3'
 services:
+  api:
+    container_name: contactkeeper-api
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      ASPNETCORE_URLS: http://+:5000
+      AuthTriggerUrl: http://functions:80/api/authtrigger
+    depends_on:
+      - functions
+
+  functions:
+    container_name: functions
+    build:
+      context: ../Functions
+      dockerfile: ./Dockerfile
+    ports:
+      - "7124:80"
+
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus:/etc/prometheus
     ports:
       - "9090:9090"
 

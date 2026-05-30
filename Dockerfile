@@ -7,7 +7,7 @@ WORKDIR /app
 
 # [2] Copy all project files (including subdirectories) and restore dependencies
 COPY . .
-RUN dotnet clean
+#RUN dotnet clean
 RUN dotnet restore --disable-parallel --no-cache
 RUN dotnet dev-certs https --trust
 

@@ -179,18 +179,18 @@ app.UseReDoc();
 app.MapControllers();
 
 
-// using (var scope = app.Services.CreateScope())
-// {
-//     var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
-//     try
-//     {
-//         dbContext.Database.Migrate();
-//     }
-//     catch (Exception ex)
-//     {
-//         Console.WriteLine($"Migration error: {ex.Message}");
-//         throw;
-//     }
-// }
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
+    try
+    {
+        dbContext.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Migration error: {ex.Message}");
+        throw;
+    }
+}
 
 app.Run();

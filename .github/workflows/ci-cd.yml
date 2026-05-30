@@ -44,6 +44,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Clean up migrations 
+        run: |
+          echo "Removing migrations and database files if exist"
+          rm -rf ./ContactKeeper.Data/Migrations
+
       - name: Create Docker network
         run: docker network create contactkeeper-network
 

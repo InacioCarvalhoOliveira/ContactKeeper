@@ -1,11 +1,12 @@
 ﻿using ContactKeeper.Models.Test;
 using Microsoft.Extensions.Configuration;using System.Net;
+using NUnit.Framework;
 
 namespace ContactKeeper.Test
 {
     [TestFixture]
     [NonParallelizable]
-    public class UnitTest1
+    public class HealthTest
     {
         private HttpClient _client = null!;
         private EnvironmentUrls? _urls;

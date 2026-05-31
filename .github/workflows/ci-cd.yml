@@ -109,7 +109,6 @@
               docker exec -i sqlserver sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "DROP DATABASE IF EXISTS ContactKeeper; CREATE DATABASE ContactKeeper;" || { echo "Failed to create database"; docker logs sqlserver; exit 1; } 
         
         
-        
         - name: Run Azurite container
           run: |
             docker run --name azurite \
@@ -159,7 +158,7 @@
               -e "AuthTriggerUrl=http://functions:80/api/authtrigger" \
               -d ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-api:latest
 
-        - name: Run tests and health check
+        - name: Wait for API
           run: |
             echo "Waiting for API to initialize..."
             for i in {1..30}; do
@@ -176,4 +175,21 @@
               exit 1
             fi
 
+        - name: Seed test user
+          run: |
+            docker exec -i sqlserver /opt/mssql-tools/bin/sqlcmd \
+              -S localhost \
+              -U sa \
+              -P "${{ secrets.SQL_SERVER_PASSWORD }}" \
+              -d ContactKeeper \
+              -Q "
+                IF NOT EXISTS (SELECT 1 FROM [dbo].[User] WHERE [Username] = 'inacio')
+                BEGIN
+                  INSERT INTO [dbo].[User] ([Email], [Password], [Username], [Role])
+                  VALUES ('inacio@test.com', '12345678910', 'inacio', 'admin')
+                END
+              "
+
+        - name: Run tests
+          run: |
             dotnet test ./ContactKeeper.Test/ContactKeeper.Test.csproj --configuration Release --verbosity normal

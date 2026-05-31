@@ -109,77 +109,96 @@ namespace ContactKeeper.Test
             Assert.That(body, Does.Contain("user"));
         }
 
-        // [Test]
-        // public async Task InvalidLogin_ReturnsNotFound()
-        // {
-        //     var payload = new
-        //     {
-        //         username = "inacio",
-        //         role = "admin",
-        //         password = "senha-errada"
-        //     };
+        [Test]
+        public async Task InvalidLogin_ReturnsNotFound()
+        {
+            var payload = new
+            {
+                username = "inacio",
+                role = "admin",
+                password = "senha-errada"
+            };
 
-        //     var response = await _client.PostAsync(
-        //         "/User/login",
-        //         new StringContent(
-        //             JsonSerializer.Serialize(payload),
-        //             Encoding.UTF8,
-        //             "application/json"));
+            var response = await _client.PostAsync(
+                "/User/login",
+                new StringContent(
+                    JsonSerializer.Serialize(payload),
+                    Encoding.UTF8,
+                    "application/json"));
 
-        //     Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
-        // }
+            var body = await response.Content.ReadAsStringAsync();
+            TestContext.Progress.WriteLine($"InvalidLogin StatusCode: {(int)response.StatusCode} - {response.StatusCode}");
+            TestContext.Progress.WriteLine($"InvalidLogin Response body: {body}");
 
-        // [Test]
-        // public async Task UserWithoutToken_ReturnsUnauthorized()
-        // {
-        //     var response = await _client.GetAsync("/User");
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound), body);
+        }
 
-        //     Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
-        // }
+        [Test]
+        public async Task UserWithoutToken_ReturnsUnauthorized()
+        {
+            // Não adiciona Authorization header de propósito
+            var response = await _client.GetAsync("/User");
+            var body = await response.Content.ReadAsStringAsync();
 
-        // [Test]
-        // public async Task GetUser_AsAdmin_ReturnsOk()
-        // {
-        //     await AuthorizeAsAdminAsync();
+            TestContext.Progress.WriteLine($"UserWithoutToken StatusCode: {(int)response.StatusCode} - {response.StatusCode}");
+            TestContext.Progress.WriteLine($"UserWithoutToken Response body: {body}");
 
-        //     var response = await _client.GetAsync("/User");
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized), body);
+        }
 
-        //     Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        [Test]
+        public async Task GetUser_AsAdmin_ReturnsOk()
+        {
+            await AuthorizeAsAdminAsync();
 
-        //     var content = await response.Content.ReadAsStringAsync();
-        //     Assert.That(content, Does.StartWith("["));
-        // }
+            var response = await _client.GetAsync("/User");
+            var body = await response.Content.ReadAsStringAsync();
 
-        // [Test]
-        // public async Task InvalidUserId_ReturnsNotFound()
-        // {
-        //     await AuthorizeAsAdminAsync();
+            TestContext.Progress.WriteLine($"GetUser_AsAdmin StatusCode: {(int)response.StatusCode} - {response.StatusCode}");
+            TestContext.Progress.WriteLine($"GetUser_AsAdmin Response body: {body}");
 
-        //     var response = await _client.GetAsync("/User/999999");
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), body);
+            Assert.That(body.TrimStart(), Does.StartWith("["), "Expected JSON array for /User response.");
+        }
 
-        //     Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
-        // }
+        [Test]
+        public async Task InvalidUserId_ReturnsNotFound()
+        {
+            await AuthorizeAsAdminAsync();
 
-        // [Test]
-        // public async Task InvalidUserPayload_ReturnsBadRequest()
-        // {
-        //     var payload = new
-        //     {
-        //         username = "",
-        //         password = "",
-        //         role = "",
-        //         email = ""
-        //     };
+            var response = await _client.GetAsync("/User/999999");
+            var body = await response.Content.ReadAsStringAsync();
 
-        //     var response = await _client.PostAsync(
-        //         "/User",
-        //         new StringContent(
-        //             JsonSerializer.Serialize(payload),
-        //             Encoding.UTF8,
-        //             "application/json"));
+            TestContext.Progress.WriteLine($"InvalidUserId StatusCode: {(int)response.StatusCode} - {response.StatusCode}");
+            TestContext.Progress.WriteLine($"InvalidUserId Response body: {body}");
 
-        //     Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
-        // }
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound), body);
+        }
 
+        [Test]
+        public async Task InvalidUserPayload_ReturnsBadRequest()
+        {
+            var payload = new
+            {
+                username = "",
+                password = "",
+                role = "",
+                email = ""
+            };
+
+            var response = await _client.PostAsync(
+                "/User",
+                new StringContent(
+                    JsonSerializer.Serialize(payload),
+                    Encoding.UTF8,
+                    "application/json"));
+
+            var body = await response.Content.ReadAsStringAsync();
+
+            TestContext.Progress.WriteLine($"InvalidUserPayload StatusCode: {(int)response.StatusCode} - {response.StatusCode}");
+            TestContext.Progress.WriteLine($"InvalidUserPayload Response body: {body}");
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest), body);
+        }
     }
 }

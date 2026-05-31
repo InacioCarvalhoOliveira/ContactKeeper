@@ -61,11 +61,14 @@ namespace ContactKeeper.Test
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             var response = await _client.PostAsync("/User/login", content);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            TestContext.Progress.WriteLine($"LoginAsAdmin StatusCode: {(int)response.StatusCode} - {response.StatusCode}");
+            TestContext.Progress.WriteLine($"LoginAsAdmin Response body: {responseBody}");
+
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
 
-            var responseBody = await response.Content.ReadAsStringAsync();
             using var doc = JsonDocument.Parse(responseBody);
-
             var token = doc.RootElement.GetProperty("token").GetString();
 
             Assert.That(token, Is.Not.Null.And.Not.Empty);
@@ -98,7 +101,10 @@ namespace ContactKeeper.Test
 
             var body = await response.Content.ReadAsStringAsync();
 
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), body);
+            TestContext.Progress.WriteLine($"StatusCode: {(int)response.StatusCode} - {response.StatusCode}");
+            TestContext.Progress.WriteLine($"Response body: {body}");
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
             Assert.That(body, Does.Contain("token"));
             Assert.That(body, Does.Contain("user"));
         }

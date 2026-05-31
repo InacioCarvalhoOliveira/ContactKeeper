@@ -108,19 +108,35 @@
               echo "Creating empty database..."
               docker exec -i sqlserver sqlcmd -S localhost -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "DROP DATABASE IF EXISTS ContactKeeper; CREATE DATABASE ContactKeeper;" || { echo "Failed to create database"; docker logs sqlserver; exit 1; } 
         
+        
+        
+        - name: Run Azurite container
+          run: |
+            docker run --name azurite \
+              --network contactkeeper-network \
+              -p 10000:10000 \
+              -p 10001:10001 \
+              -p 10002:10002 \
+              -d mcr.microsoft.com/azure-storage/azurite \
+              azurite --blobHost 0.0.0.0 --queueHost 0.0.0.0 --tableHost 0.0.0.0 --location /data
+
         - name: Run Functions container
           run: |
             docker run --name functions \
               --network contactkeeper-network \
               -e ASPNETCORE_URLS=http://+:80 \
+              -e FUNCTIONS_WORKER_RUNTIME=dotnet-isolated \
+              -e WEBSITES_INCLUDE_CLOUD_CERTS=true \
+              -e AzureWebJobsStorage="DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1;QueueEndpoint=http://azurite:10001/devstoreaccount1;TableEndpoint=http://azurite:10002/devstoreaccount1;" \
               -p 7124:80 \
               -d ${{ secrets.DOCKER_USERNAME }}/main-contactkeeper-functions:latest
+
 
         - name: Wait for Functions
           run: |
             echo "Waiting for Functions to initialize..."
             for i in {1..30}; do
-              if curl -f http://localhost:7124/api/authtrigger > /dev/null 2>&1; then
+              if curl -s http://localhost:7124 > /dev/null 2>&1; then
                 echo "Functions is ready!"
                 break
               fi

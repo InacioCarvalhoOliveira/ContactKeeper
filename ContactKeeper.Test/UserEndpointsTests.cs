@@ -96,11 +96,11 @@ namespace ContactKeeper.Test
                     Encoding.UTF8,
                     "application/json"));
 
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+            var body = await response.Content.ReadAsStringAsync();
 
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.That(content, Does.Contain("token"));
-            Assert.That(content, Does.Contain("user"));
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), body);
+            Assert.That(body, Does.Contain("token"));
+            Assert.That(body, Does.Contain("user"));
         }
 
         // [Test]

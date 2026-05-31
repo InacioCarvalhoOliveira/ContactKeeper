@@ -169,8 +169,11 @@ namespace ContactKeeper.Controllers
 
                     using (AuthLatencyHistogram.NewTimer())
                     {
+                        Console.WriteLine($"AuthTriggerUrl: {_authTriggerUrl}");
+
                         var user = await _userRepository.Authenticate(model.Username, model.Role, model.Password);
                         if (user == null)
+                        
                         {
                             LoginFailureCounter.Inc(); // Increment failure on invalid login
                             result = NotFound(new { message = "User or password invalid" });
@@ -195,6 +198,8 @@ namespace ContactKeeper.Controllers
                         var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
 
                         var response = await httpClient.PostAsync(_authTriggerUrl, content);
+                        Console.WriteLine($"Function response status: {(int)response.StatusCode} - {response.StatusCode}");
+                        Console.WriteLine($"AuthTriggerUrl: {_authTriggerUrl}");
                         if (!response.IsSuccessStatusCode)
                         {
                             result = StatusCode((int)response.StatusCode, "Token generation failed");
@@ -202,6 +207,8 @@ namespace ContactKeeper.Controllers
                         }
 
                         var tokenJson = await response.Content.ReadAsStringAsync();
+                        Console.WriteLine($"Function response body: {tokenJson}");
+
                         user.Password = "";
                         var token = JsonDocument.Parse(tokenJson).RootElement.GetProperty("token").GetString();
                         result = Ok(new { token = token, user = user });
@@ -216,6 +223,8 @@ namespace ContactKeeper.Controllers
             }
             catch (Exception ex)
             {
+                    Console.WriteLine($"Authenticate error: {ex}");
+
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }

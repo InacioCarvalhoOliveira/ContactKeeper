@@ -88,7 +88,7 @@ namespace ContactKeeper.Test
             var payload = new
             {
                 username = "inacio",
-                password = "12345678",
+                password = "12345678910",
                 role = "admin"
             };
 

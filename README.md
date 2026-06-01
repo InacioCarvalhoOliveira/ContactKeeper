@@ -21,6 +21,7 @@ Este projeto se baseia na ideia de Gerenciamento de contatos Telefônicos. Com e
 - Microsserviços externos;
 - Functions on Azure;
 - Autenticação com JWT. 
+- ci-cd do Actions do GitHub
 
 ## ⚒️ Configuração
 

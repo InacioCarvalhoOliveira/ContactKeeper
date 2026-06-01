@@ -1,4 +1,15 @@
 services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sa
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "GosthTro0per.ZUZ236!"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+
   api:
     container_name: contactkeeper-api
     build:
@@ -9,7 +20,9 @@ services:
     environment:
       ASPNETCORE_URLS: http://+:5000
       AuthTriggerUrl: http://functions:80/api/authtrigger
+      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=ContactKeeper;User Id=sa;Password=GosthTro0per.ZUZ236!;TrustServerCertificate=True;"
     depends_on:
+      - sqlserver
       - functions
 
   functions:
@@ -48,3 +61,6 @@ services:
     container_name: grafana
     ports:
       - "3000:5432"
+
+volumes:
+  sql_data:

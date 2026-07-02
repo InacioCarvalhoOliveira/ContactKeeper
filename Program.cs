@@ -36,7 +36,7 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "ContactKeeper API V2",
+        Title = "ContactKeeper API V3",
         Version = "v1",
         Description = "API para Cadastro e consulta de Contatos telefônicos",
         Contact = new OpenApiContact

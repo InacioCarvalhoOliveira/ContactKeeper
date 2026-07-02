@@ -16,6 +16,7 @@ spec:
       containers:
       - name: contactkeeper-api
         image: acrcontactkeeper.azurecr.io/contactkeeper-api:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 5000
         env:

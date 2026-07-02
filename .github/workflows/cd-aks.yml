@@ -61,6 +61,7 @@ jobs:
           kubectl apply -f k8s/functions-service.yaml
           kubectl apply -f k8s/functions-deployment.yaml
           kubectl apply -f k8s/api-service.yaml
+          kubectl apply -f k8s/api-deployment.yaml
 
       - name: Update API image in AKS
         run: |

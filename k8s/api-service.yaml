@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: contactkeeper-api
+  namespace: contactkeeper
+spec:
+  selector:
+    app: contactkeeper-api
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: LoadBalancer

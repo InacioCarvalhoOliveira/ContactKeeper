@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: contactkeeper-functions
+  namespace: contactkeeper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: contactkeeper-functions
+  template:
+    metadata:
+      labels:
+        app: contactkeeper-functions
+    spec:
+      containers:
+        - name: contactkeeper-functions
+          image: acrcontactkeeper.azurecr.io/contactkeeper-functions:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          env:
+            - name: FUNCTIONS_WORKER_RUNTIME
+              value: "dotnet-isolated"
+            - name: ASPNETCORE_ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: contactkeeper-config
+                  key: ASPNETCORE_ENVIRONMENT
+            - name: AzureWebJobsStorage
+              valueFrom:
+                secretKeyRef:
+                  name: contactkeeper-secrets
+                  key: AzureWebJobsStorage

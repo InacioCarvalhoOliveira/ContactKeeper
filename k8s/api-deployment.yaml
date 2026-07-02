@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: contactkeeper-api
+  namespace: contactkeeper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: contactkeeper-api
+  template:
+    metadata:
+      labels:
+        app: contactkeeper-api
+    spec:
+      containers:
+      - name: contactkeeper-api
+        image: acrcontactkeeper.azurecr.io/contactkeeper-api:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Production"
+        - name: ASPNETCORE_URLS
+          value: "http://+:5000"
+        - name: DatabaseSettings__Production
+          valueFrom:
+            secretKeyRef:
+              name: contactkeeper-secrets
+              key: DatabaseSettings__Production
+        - name: AuthTriggerUrl
+          valueFrom:
+            configMapKeyRef:
+              name: contactkeeper-config
+              key: AuthTriggerUrl
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: contactkeeper-api
+  namespace: contactkeeper
+spec:
+  type: LoadBalancer
+  selector:
+    app: contactkeeper-api
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000

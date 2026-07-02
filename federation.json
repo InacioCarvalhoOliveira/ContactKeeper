@@ -1,0 +1,9 @@
+{
+  "name": "github-contactkeeper-devops",
+  "issuer": "https://token.actions.githubusercontent.com",
+  "subject": "repo:InacioCarvalhoOliveira/ContactKeeper:ref:refs/heads/devops",
+  "audiences": [
+    "api://AzureADTokenExchange"
+  ],
+  "description": "Federated credential for GitHub Actions on devops"
+}

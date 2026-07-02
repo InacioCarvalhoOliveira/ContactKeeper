@@ -1,0 +1,78 @@
+name: CD AKS ContactKeeper
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  ACR_NAME: acrcontactkeeper
+  ACR_LOGIN_SERVER: acrcontactkeeper.azurecr.io
+  AKS_CLUSTER_NAME: aks-contactkeeper
+  AKS_RESOURCE_GROUP: rg-contactkeeper
+  K8S_NAMESPACE: contactkeeper
+  API_IMAGE_NAME: contactkeeper-api
+
+jobs:
+  deploy-api-to-aks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: ACR login
+        run: az acr login --name ${{ env.ACR_NAME }}
+
+      - name: Set image tag
+        run: echo "IMAGE_TAG=${{ env.ACR_LOGIN_SERVER }}/${{ env.API_IMAGE_NAME }}:${{ github.sha }}" >> $GITHUB_ENV
+
+      - name: Build and push API image
+        run: |
+          docker build -t $IMAGE_TAG -f ./Dockerfile .
+          docker push $IMAGE_TAG
+
+      - name: Get AKS credentials
+        run: |
+          az aks get-credentials \
+            --resource-group ${{ env.AKS_RESOURCE_GROUP }} \
+            --name ${{ env.AKS_CLUSTER_NAME }} \
+            --overwrite-existing
+
+      - name: Apply Kubernetes base manifests
+        run: |
+          kubectl apply -f k8s/namespace.yaml
+          kubectl apply -f k8s/configmap.yaml
+          kubectl apply -f k8s/secret.yaml
+          kubectl apply -f k8s/sqlserver-service.yaml
+          kubectl apply -f k8s/sqlserver-deployment.yaml
+          kubectl apply -f k8s/functions-service.yaml
+          kubectl apply -f k8s/functions-deployment.yaml
+          kubectl apply -f k8s/api-service.yaml
+
+      - name: Update API image in AKS
+        run: |
+          kubectl set image deployment/contactkeeper-api \
+            contactkeeper-api=$IMAGE_TAG \
+            -n ${{ env.K8S_NAMESPACE }}
+
+      - name: Wait for rollout
+        run: |
+          kubectl rollout status deployment/contactkeeper-api -n ${{ env.K8S_NAMESPACE }} --timeout=300s
+
+      - name: Verify deployment
+        run: |
+          kubectl get pods -n ${{ env.K8S_NAMESPACE }}
+          kubectl get svc -n ${{ env.K8S_NAMESPACE }} 

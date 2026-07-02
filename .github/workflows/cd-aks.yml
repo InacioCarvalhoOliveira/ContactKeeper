@@ -3,7 +3,7 @@ name: CD AKS ContactKeeper
 on:
   push:
     branches:
-      - main
+      - devops
   workflow_dispatch:
 
 permissions:

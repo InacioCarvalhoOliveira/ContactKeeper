@@ -42,7 +42,7 @@ builder.Services.AddSwaggerGen(c =>
         Contact = new OpenApiContact
         {
             Name = "Inacio Carvalho de Oliveira",
-            Url = new Uri("http://localhost:5059/api-docs/index.html"),
+            Url = new Uri("http://20.201.53.204/api-docs/index.html"),
             Extensions = { { "LinkedIn", new OpenApiString("https://www.linkedin.com/in/inacio-carvalho-oliveira") } },
         }
 
